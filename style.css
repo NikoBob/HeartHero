@@ -1,0 +1,504 @@
+/* ══ Reset & Base ════════════════════════════════════════════════════════ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  background: #fdf2f2;
+  color: #1a1a1a;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ══ App Layout ══════════════════════════════════════════════════════════ */
+.app {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px 16px 56px;
+}
+
+/* ══ Hero Card ═══════════════════════════════════════════════════════════ */
+.hero-card {
+  background: linear-gradient(135deg, #e8001d 0%, #9b0000 100%);
+  color: white;
+  padding: 44px 28px;
+  border-radius: 28px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 14px 40px rgba(180, 0, 0, 0.28);
+}
+
+/* Subtle heartbeat pulse on the logo emoji */
+.logo {
+  font-size: 54px;
+  margin-bottom: 14px;
+  display: inline-block;
+  animation: heartbeat 1.6s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%   { transform: scale(1); }
+  14%  { transform: scale(1.18); }
+  28%  { transform: scale(1); }
+  42%  { transform: scale(1.12); }
+  70%  { transform: scale(1); }
+  100% { transform: scale(1); }
+}
+
+.hero-card h1 {
+  font-size: 46px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  margin-bottom: 12px;
+}
+
+.subtitle {
+  font-size: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+  opacity: 0.9;
+  line-height: 1.65;
+}
+
+/* ══ Check-In Card ═══════════════════════════════════════════════════════ */
+.checkin-card {
+  background: white;
+  padding: 32px;
+  border-radius: 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+}
+
+.checkin-card h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.small-text {
+  color: #666;
+  font-size: 15px;
+  margin-bottom: 28px;
+}
+
+/* ══ Form Groups ═════════════════════════════════════════════════════════ */
+.form-group {
+  margin-bottom: 22px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 8px;
+  color: #1a1a1a;
+}
+
+.label-icon {
+  margin-right: 4px;
+}
+
+.input-hint {
+  display: block;
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 6px;
+  font-weight: 400;
+}
+
+/* ══ Number Inputs ═══════════════════════════════════════════════════════ */
+input[type="number"] {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 14px;
+  font-size: 16px;
+  font-family: inherit;
+  background: #fafafa;
+  color: #1a1a1a;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+input[type="number"]:focus {
+  outline: none;
+  border-color: #e8001d;
+  box-shadow: 0 0 0 3px rgba(232, 0, 29, 0.1);
+  background: white;
+}
+
+/* Remove browser number-input spin arrows */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 0.4;
+}
+
+/* ══ Range Slider ════════════════════════════════════════════════════════ */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 6px;
+  /* Background is controlled by JS via inline style for the fill effect */
+  background: #e0e0e0;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* Thumb styling – Chrome/Safari */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e8001d;
+  box-shadow: 0 2px 8px rgba(232, 0, 29, 0.4);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 3px 12px rgba(232, 0, 29, 0.5);
+}
+
+/* Thumb styling – Firefox */
+input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e8001d;
+  border: none;
+  box-shadow: 0 2px 8px rgba(232, 0, 29, 0.4);
+  cursor: pointer;
+}
+
+.stress-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8001d;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.stress-out-of {
+  font-weight: 400;
+  color: #888;
+  font-size: 14px;
+  margin-left: 3px;
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #bbb;
+  margin-top: 6px;
+  font-weight: 400;
+}
+
+/* ══ Symptoms Box ════════════════════════════════════════════════════════ */
+.symptoms-box {
+  background: #fff8f8;
+  border: 1.5px solid #ffd4d4;
+  padding: 18px;
+  border-radius: 16px;
+  margin-bottom: 24px;
+}
+
+.symptoms-title {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.symptoms-subtitle {
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 14px;
+  font-weight: 400;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 400;
+  font-size: 15px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  padding: 9px 10px;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+
+.checkbox-row:last-child {
+  margin-bottom: 0;
+}
+
+.checkbox-row:hover {
+  background: rgba(232, 0, 29, 0.05);
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #e8001d;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ══ Submit Button ═══════════════════════════════════════════════════════ */
+button[type="submit"] {
+  width: 100%;
+  background: linear-gradient(135deg, #e8001d, #a80015);
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+  box-shadow: 0 4px 18px rgba(232, 0, 29, 0.35);
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+button[type="submit"]:hover {
+  opacity: 0.91;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(232, 0, 29, 0.45);
+}
+
+button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* ══ Result Card ═════════════════════════════════════════════════════════ */
+.result-card {
+  margin-top: 28px;
+  padding: 28px;
+  border-radius: 22px;
+  text-align: center;
+  background: #f9f9f9;
+  border: 1.5px solid #ebebeb;
+  transition: background 0.4s, border-color 0.4s;
+}
+
+.result-card h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #777;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.score-number {
+  font-size: 68px;
+  font-weight: 800;
+  letter-spacing: -2px;
+  margin: 6px 0;
+  transition: color 0.4s;
+}
+
+/* ══ Score Progress Bar ══════════════════════════════════════════════════ */
+.score-bar {
+  width: 100%;
+  height: 8px;
+  background: #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 0 0 18px;
+}
+
+.score-bar-fill {
+  height: 100%;
+  border-radius: 8px;
+  width: 0%;
+  transition: width 1s ease;
+}
+
+.risk-level {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.feedback {
+  color: #555;
+  font-size: 15px;
+  line-height: 1.65;
+  max-width: 440px;
+  margin: 0 auto 22px;
+}
+
+/* ══ Colour themes — applied to the result-card when risk is determined ═ */
+
+/* Low Concern (green) */
+.result-card.low {
+  background: #f0fff5;
+  border-color: #b2f0cb;
+}
+.result-card.low .score-number,
+.result-card.low .risk-level {
+  color: #0f8a3a;
+}
+.result-card.low .score-bar-fill {
+  background: linear-gradient(90deg, #22e05e, #0f8a3a);
+}
+
+/* Medium Concern (amber) */
+.result-card.medium {
+  background: #fffdf0;
+  border-color: #ffe9a0;
+}
+.result-card.medium .score-number,
+.result-card.medium .risk-level {
+  color: #b87300;
+}
+.result-card.medium .score-bar-fill {
+  background: linear-gradient(90deg, #ffd430, #b87300);
+}
+
+/* High Concern (red) */
+.result-card.high {
+  background: #fff5f5;
+  border-color: #ffc6c6;
+}
+.result-card.high .score-number,
+.result-card.high .risk-level {
+  color: #c90000;
+}
+.result-card.high .score-bar-fill {
+  background: linear-gradient(90deg, #ff6b6b, #c90000);
+}
+
+/* ══ Score Breakdown ═════════════════════════════════════════════════════ */
+.breakdown-section {
+  text-align: left;
+  background: white;
+  border: 1.5px solid #ebebeb;
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin: 0 auto 22px;
+  max-width: 460px;
+}
+
+.breakdown-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 10px;
+}
+
+.breakdown-list {
+  list-style: none;
+  padding: 0;
+}
+
+.breakdown-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13.5px;
+  padding: 7px 0;
+  border-bottom: 1px solid #f2f2f2;
+  color: #333;
+  gap: 12px;
+}
+
+.breakdown-list li:last-child {
+  border-bottom: none;
+}
+
+.breakdown-list .deduction {
+  font-weight: 700;
+  color: #c90000;
+  white-space: nowrap;
+}
+
+.breakdown-list .ok {
+  font-weight: 700;
+  color: #0f8a3a;
+}
+
+/* ══ Reset / Check-In-Again Button ══════════════════════════════════════ */
+.reset-btn {
+  display: inline-block;
+  background: transparent;
+  color: #e8001d;
+  border: 2px solid #e8001d;
+  padding: 10px 30px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.reset-btn:hover {
+  background: #e8001d;
+  color: white;
+}
+
+/* ══ Medical Disclaimer Box ═══════════════════════════════════════════ */
+.disclaimer-box {
+  margin-top: 24px;
+  padding: 16px 20px;
+  background: #fff8f8;
+  border: 1.5px solid #ffd4d4;
+  border-radius: 16px;
+}
+
+.disclaimer-heading {
+  font-size: 13px;
+  font-weight: 700;
+  color: #c00;
+  margin-bottom: 6px;
+}
+
+.disclaimer {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.65;
+}
+
+/* ══ Utility ═════════════════════════════════════════════════════════════ */
+.hidden {
+  display: none;
+}
+
+/* ══ Responsive (mobile) ════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  .hero-card h1 {
+    font-size: 36px;
+  }
+
+  .hero-card {
+    padding: 34px 20px;
+  }
+
+  .checkin-card {
+    padding: 24px 18px;
+  }
+
+  .score-number {
+    font-size: 54px;
+  }
+}

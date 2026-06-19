@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HeartHero</title>
+  <!-- Modern clean font from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+
+    <!-- ══ Hero / Title Section ══════════════════════════════════════════ -->
+    <section class="hero-card">
+      <div class="logo" aria-hidden="true">❤️</div>
+      <h1>HeartHero</h1>
+      <p class="subtitle">
+        Your daily heart-health check-in. Track habits, spot patterns,
+        and stay aware — in under a minute.
+      </p>
+    </section>
+
+    <!-- ══ Daily Check-In Form ══════════════════════════════════════════ -->
+    <section class="checkin-card">
+      <h2>Daily Check-In</h2>
+      <p class="small-text">Fill in today's information to get your HeartHero Score.</p>
+
+      <form id="checkinForm" novalidate>
+
+        <!-- Heart Rate -->
+        <div class="form-group">
+          <label for="heartRate">
+            <span class="label-icon">💓</span> Resting Heart Rate
+          </label>
+          <input
+            type="number"
+            id="heartRate"
+            placeholder="e.g. 72"
+            min="30"
+            max="220"
+            required
+          />
+          <span class="input-hint">Normal resting range: 60 – 100 bpm</span>
+        </div>
+
+        <!-- Sleep Hours -->
+        <div class="form-group">
+          <label for="sleepHours">
+            <span class="label-icon">🌙</span> Sleep Last Night (hours)
+          </label>
+          <input
+            type="number"
+            id="sleepHours"
+            placeholder="e.g. 7"
+            step="0.5"
+            min="0"
+            max="24"
+            required
+          />
+          <span class="input-hint">Recommended: 7 – 9 hours for adults</span>
+        </div>
+
+        <!-- Stress Level (range slider) -->
+        <div class="form-group">
+          <label for="stressLevel">
+            <span class="label-icon">🧠</span> Stress Level:
+            <span id="stressValue" class="stress-badge">5</span>
+            <span class="stress-out-of">/10</span>
+          </label>
+          <input type="range" id="stressLevel" min="1" max="10" value="5" />
+          <div class="range-labels">
+            <span>Calm</span>
+            <span>Very Stressed</span>
+          </div>
+        </div>
+
+        <!-- Exercise Minutes -->
+        <div class="form-group">
+          <label for="exerciseMinutes">
+            <span class="label-icon">🏃</span> Exercise Today (minutes)
+          </label>
+          <input
+            type="number"
+            id="exerciseMinutes"
+            placeholder="e.g. 30"
+            min="0"
+            required
+          />
+          <span class="input-hint">Recommended: at least 30 min of moderate activity</span>
+        </div>
+
+        <!-- Symptoms checkboxes -->
+        <div class="symptoms-box">
+          <p class="symptoms-title">⚠️ Symptoms Today</p>
+          <p class="symptoms-subtitle">Check any symptoms you have noticed today.</p>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="chestPain" />
+            <span>Chest pain or pressure</span>
+          </label>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="shortnessBreath" />
+            <span>Shortness of breath</span>
+          </label>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="dizziness" />
+            <span>Dizziness or lightheadedness</span>
+          </label>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="palpitations" />
+            <span>Heart palpitations or racing heart</span>
+          </label>
+        </div>
+
+        <button type="submit">Calculate My Heart Score</button>
+      </form>
+
+      <!-- ══ Result Card (hidden until form is submitted) ═══════════════ -->
+      <div id="resultCard" class="result-card hidden" aria-live="polite">
+        <h3>Your HeartHero Score</h3>
+
+        <!-- Animated score number -->
+        <div id="scoreNumber" class="score-number">--</div>
+
+        <!-- Progress bar showing score visually -->
+        <div class="score-bar" role="progressbar" aria-label="Heart score bar">
+          <div id="scoreBarFill" class="score-bar-fill"></div>
+        </div>
+
+        <!-- Risk level label (Low / Medium / High Concern) -->
+        <p id="riskLevel" class="risk-level"></p>
+
+        <!-- Short personalised feedback message -->
+        <p id="feedback" class="feedback"></p>
+
+        <!-- Breakdown of what affected the score -->
+        <div class="breakdown-section">
+          <p class="breakdown-title">Score Breakdown</p>
+          <ul id="breakdownList" class="breakdown-list"></ul>
+        </div>
+
+        <button type="button" id="resetBtn" class="reset-btn">Check In Again</button>
+      </div>
+
+      <!-- ══ Medical Disclaimer ════════════════════════════════════════ -->
+      <div class="disclaimer-box">
+        <p class="disclaimer-heading">⚕️ Medical Disclaimer</p>
+        <p class="disclaimer">
+          HeartHero is a personal tracking tool, <strong>not</strong> a medical
+          diagnosis. It cannot replace a doctor's evaluation. If you experience
+          severe chest pain, difficulty breathing, sudden dizziness, or any
+          emergency symptoms — <strong>call emergency services immediately</strong>.
+        </p>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
