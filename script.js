@@ -1,44 +1,37 @@
 // ══════════════════════════════════════════════════════════════════════════════
-// HeartHero – script.js
-// This file handles: form scoring, localStorage, dashboard, insights, and trend.
+// HeartHero — script.js
+// Sections:  1. localStorage  2. Slider  3. Validation  4. Form & Scoring
+//            5. Animation & Breakdown  6. Insights  7. Dashboard
+//            8. Trend  9. History  10. Shared Refresh & Reset  11. Page Load
 // ══════════════════════════════════════════════════════════════════════════════
 
 // ══ localStorage Key ══════════════════════════════════════════════════════════
-// Every check-in entry is stored in localStorage under this key as a JSON string.
 const STORAGE_KEY = "hearthero_checkins";
 
 // ══ Element References ════════════════════════════════════════════════════════
-// Grab every element we need once on page load to avoid repeated DOM lookups.
-
-// Form and inputs
 const form          = document.getElementById("checkinForm");
 const stressSlider  = document.getElementById("stressLevel");
 const stressDisplay = document.getElementById("stressValue");
+const submitBtn     = document.getElementById("submitBtn");
 
-// Result card elements
 const resultCard    = document.getElementById("resultCard");
 const scoreNumber   = document.getElementById("scoreNumber");
 const scoreBarFill  = document.getElementById("scoreBarFill");
 const riskLevelEl   = document.getElementById("riskLevel");
 const feedbackEl    = document.getElementById("feedback");
 const breakdownList = document.getElementById("breakdownList");
+const insightList   = document.getElementById("insightList");
 const resetBtn      = document.getElementById("resetBtn");
 
-// Insight card (inside the result card)
-const insightList   = document.getElementById("insightList");
-
-// Dashboard cards
 const dashboardSection = document.getElementById("dashboardSection");
 const dashLatestScore  = document.getElementById("dashLatestScore");
 const dashAvgScore     = document.getElementById("dashAvgScore");
 const dashTotal        = document.getElementById("dashTotal");
 const dashConcern      = document.getElementById("dashConcern");
 
-// Score trend section
 const trendSection = document.getElementById("trendSection");
 const trendBars    = document.getElementById("trendBars");
 
-// History section
 const historySection  = document.getElementById("historySection");
 const historyList     = document.getElementById("historyList");
 const historyCount    = document.getElementById("historyCount");
@@ -47,24 +40,22 @@ const clearHistoryBtn = document.getElementById("clearHistoryBtn");
 // ══════════════════════════════════════════════════════════════════════════════
 // SECTION 1 – localStorage Helpers
 // ══════════════════════════════════════════════════════════════════════════════
-// localStorage can only hold plain text strings, so we convert our JavaScript
-// arrays/objects using JSON.stringify() before saving and JSON.parse() when loading.
+// localStorage stores everything as plain text strings.
+// JSON.stringify() converts a JS array → string before saving.
+// JSON.parse()     converts that string back → JS array when loading.
 
-// Returns the saved history array, or [] if nothing is stored yet.
 function loadHistory() {
   const stored = localStorage.getItem(STORAGE_KEY);
   return stored ? JSON.parse(stored) : [];
 }
 
-// Overwrites the full history array in localStorage.
 function saveHistory(entries) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
 }
 
-// Adds a new entry to the beginning of the array (newest first) then saves.
 function addCheckinToHistory(entry) {
   const history = loadHistory();
-  history.unshift(entry); // unshift() prepends to the array
+  history.unshift(entry); // prepend so newest is always first
   saveHistory(history);
 }
 
@@ -72,16 +63,15 @@ function addCheckinToHistory(entry) {
 // SECTION 2 – Stress Slider
 // ══════════════════════════════════════════════════════════════════════════════
 
-// Update the red badge number and the track fill whenever the slider moves.
 stressSlider.addEventListener("input", function () {
   stressDisplay.textContent = stressSlider.value;
   updateSliderTrack(stressSlider);
 });
 
-// Paint the slider track immediately on page load so it starts coloured.
+// Colour the slider track immediately on page load
 updateSliderTrack(stressSlider);
 
-// Paints the portion of the range track to the left of the thumb in red.
+// Paints the track left of the thumb red, right of it grey
 function updateSliderTrack(slider) {
   const pct = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
   slider.style.background =
@@ -89,13 +79,98 @@ function updateSliderTrack(slider) {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// SECTION 3 – Form Submit & Scoring Logic
+// SECTION 3 – Input Validation
+// ══════════════════════════════════════════════════════════════════════════════
+// validateForm() checks every number input before we score.
+// Returns true if all values are valid, false (+ shows errors) if not.
+
+function validateForm() {
+  clearFieldErrors();
+  let valid = true;
+
+  // Heart Rate: required, must be 30–220
+  const hrRaw = document.getElementById("heartRate").value.trim();
+  const hr    = Number(hrRaw);
+  if (hrRaw === "") {
+    showFieldError("heartRate", "Please enter your resting heart rate.");
+    valid = false;
+  } else if (hr < 30 || hr > 220) {
+    showFieldError("heartRate", "Heart rate must be between 30 and 220 bpm.");
+    valid = false;
+  }
+
+  // Sleep Hours: required, must be 0–24
+  const sleepRaw = document.getElementById("sleepHours").value.trim();
+  const sleep    = Number(sleepRaw);
+  if (sleepRaw === "") {
+    showFieldError("sleepHours", "Please enter how many hours you slept.");
+    valid = false;
+  } else if (sleep < 0 || sleep > 24) {
+    showFieldError("sleepHours", "Sleep hours must be between 0 and 24.");
+    valid = false;
+  }
+
+  // Exercise Minutes: required, must be 0–300
+  const exRaw = document.getElementById("exerciseMinutes").value.trim();
+  const ex    = Number(exRaw);
+  if (exRaw === "") {
+    showFieldError("exerciseMinutes", "Please enter exercise minutes (use 0 if none).");
+    valid = false;
+  } else if (ex < 0 || ex > 300) {
+    showFieldError("exerciseMinutes", "Exercise minutes must be between 0 and 300.");
+    valid = false;
+  }
+
+  return valid;
+}
+
+// Shows a red error message beneath a specific input field
+function showFieldError(fieldId, message) {
+  const field   = document.getElementById(fieldId);
+  const errorEl = document.getElementById(fieldId + "Error");
+  field.classList.add("invalid");
+  if (errorEl) {
+    errorEl.textContent = message;
+    errorEl.classList.remove("hidden");
+  }
+}
+
+// Clears all error states so we start fresh on each submission attempt
+function clearFieldErrors() {
+  ["heartRate", "sleepHours", "exerciseMinutes"].forEach(function (id) {
+    document.getElementById(id).classList.remove("invalid");
+    const errorEl = document.getElementById(id + "Error");
+    if (errorEl) {
+      errorEl.textContent = "";
+      errorEl.classList.add("hidden");
+    }
+  });
+}
+
+// Clear an individual field's error as soon as the user starts editing it
+["heartRate", "sleepHours", "exerciseMinutes"].forEach(function (id) {
+  document.getElementById(id).addEventListener("input", function () {
+    this.classList.remove("invalid");
+    const errorEl = document.getElementById(id + "Error");
+    if (errorEl) { errorEl.textContent = ""; errorEl.classList.add("hidden"); }
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 4 – Form Submit & Scoring Logic
 // ══════════════════════════════════════════════════════════════════════════════
 
 form.addEventListener("submit", function (event) {
-  event.preventDefault(); // Stop the browser from reloading the page
+  event.preventDefault();
 
-  // ── 3a. Read all input values ──────────────────────────────────────────────
+  // Step 1: Validate — stop here if any field is invalid
+  if (!validateForm()) return;
+
+  // Step 2: Show a loading state on the button while we "calculate"
+  submitBtn.disabled    = true;
+  submitBtn.textContent = "Calculating…";
+
+  // Step 3: Read all input values
   const heartRate       = Number(document.getElementById("heartRate").value);
   const sleepHours      = Number(document.getElementById("sleepHours").value);
   const stress          = Number(document.getElementById("stressLevel").value);
@@ -105,13 +180,13 @@ form.addEventListener("submit", function (event) {
   const dizziness       = document.getElementById("dizziness").checked;
   const palpitations    = document.getElementById("palpitations").checked;
 
-  // ── 3b. Calculate the heart score ─────────────────────────────────────────
-  // Start at 100 (a perfect day) and deduct points for each risk factor.
-  // The breakdown array records each factor so we can explain the result.
+  // ── Scoring ────────────────────────────────────────────────────────────────
+  // We start at 100 (a perfect day) and deduct points for each risk factor.
+  // The breakdown array records every factor so the user can see the reasoning.
   let score = 100;
   const breakdown = [];
 
-  // Heart Rate — normal adult range is 60–100 bpm
+  // Heart Rate — normal adult resting range: 60–100 bpm
   if (heartRate > 100) {
     score -= 20;
     breakdown.push({ label: "Heart rate elevated (>100 bpm)", points: -20 });
@@ -122,7 +197,7 @@ form.addEventListener("submit", function (event) {
     breakdown.push({ label: "Heart rate in normal range", points: 0 });
   }
 
-  // Sleep — adults need 7–9 hours; under 6 is a cardiovascular risk factor
+  // Sleep — under 6 hours is a known cardiovascular risk factor
   if (sleepHours < 6) {
     score -= 10;
     breakdown.push({ label: "Sleep under 6 hours", points: -10 });
@@ -141,7 +216,7 @@ form.addEventListener("submit", function (event) {
     breakdown.push({ label: "Stress level manageable", points: 0 });
   }
 
-  // Exercise — WHO recommends 30+ minutes of moderate activity per day
+  // Exercise — WHO recommends 30+ min of moderate activity per day
   if (exerciseMinutes < 15) {
     score -= 10;
     breakdown.push({ label: "Little or no exercise today", points: -10 });
@@ -152,7 +227,7 @@ form.addEventListener("submit", function (event) {
     breakdown.push({ label: "Exercise goal met (30+ min)", points: 0 });
   }
 
-  // Symptoms — the heaviest penalties; direct cardiac warning signs
+  // Symptoms — heaviest penalties; these are direct cardiac warning signs
   if (chestPain) {
     score -= 30;
     breakdown.push({ label: "Chest pain or pressure reported", points: -30 });
@@ -170,11 +245,11 @@ form.addEventListener("submit", function (event) {
     breakdown.push({ label: "Palpitations reported", points: -15 });
   }
 
-  // Clamp: score can never go below 0 regardless of deductions
-  if (score < 0) score = 0;
+  // Score is always 0–100; clamp in case multiple deductions exceed 100
+  score = Math.max(0, Math.min(100, score));
 
-  // ── 3c. Determine risk level ───────────────────────────────────────────────
-  // 75–100 = Low Concern  |  45–74 = Medium Concern  |  0–44 = High Concern
+  // ── Risk Level ─────────────────────────────────────────────────────────────
+  // 75–100 → Low Concern | 45–74 → Medium Concern | 0–44 → High Concern
   let level, message, levelClass;
 
   if (score >= 75) {
@@ -191,66 +266,67 @@ form.addEventListener("submit", function (event) {
     levelClass = "high";
   }
 
-  // ── 3d. Update the result card UI ─────────────────────────────────────────
-  riskLevelEl.textContent  = level;
-  feedbackEl.textContent   = message;
-  resultCard.className     = "result-card " + levelClass; // applies colour theme
+  // ── Update the result card ─────────────────────────────────────────────────
+  riskLevelEl.textContent = level;
+  feedbackEl.textContent  = message;
+  resultCard.className    = "result-card " + levelClass; // sets the colour theme
+
+  // Reset the progress bar to 0 before the new animation starts.
+  // Temporarily disable the transition so the reset is instant, not animated.
+  scoreBarFill.style.transition = "none";
+  scoreBarFill.style.width      = "0%";
+  void scoreBarFill.offsetWidth; // Force browser reflow — restarts the transition
+  scoreBarFill.style.transition = "";
 
   animateScore(score);
 
-  // Delay the bar fill slightly so the CSS transition actually plays
   setTimeout(function () { scoreBarFill.style.width = score + "%"; }, 60);
 
   buildBreakdown(breakdown);
 
-  // Show today's personalised insight messages
   renderInsights({ sleepHours, stress, exerciseMinutes, chestPain, shortnessBreath, dizziness, palpitations });
 
-  // Show the result card and scroll to it
-  resultCard.classList.remove("hidden");
+  // Play the entrance animation by removing then re-adding the class
+  resultCard.classList.remove("hidden", "result-animate");
+  void resultCard.offsetWidth; // Force reflow so the animation restarts
+  resultCard.classList.add("result-animate");
+
   resultCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
 
-  // ── 3e. Save the check-in to localStorage ─────────────────────────────────
-  // Build a plain object containing everything about this check-in.
-  // Dates are formatted into a readable string using the browser's locale.
-  const now       = new Date();
-  const date      = now.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" });
-  const shortDate = now.toLocaleDateString("en-US", { month: "short", day: "numeric" }); // "Jun 19" — used in trend bars
-  const time      = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
-
+  // ── Save to localStorage ────────────────────────────────────────────────────
+  const now = new Date();
   const checkinEntry = {
-    id:              now.getTime(),   // unique timestamp-based ID
-    date:            date,
-    shortDate:       shortDate,
-    time:            time,
-    heartRate:       heartRate,
-    sleepHours:      sleepHours,
-    stress:          stress,
-    exerciseMinutes: exerciseMinutes,
-    symptoms: {
-      chestPain:       chestPain,
-      shortnessBreath: shortnessBreath,
-      dizziness:       dizziness,
-      palpitations:    palpitations
-    },
-    score:       score,
-    levelClass:  levelClass,
-    levelLabel:  level,
-    message:     message
+    id:              now.getTime(),
+    date:            now.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" }),
+    shortDate:       now.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+    time:            now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+    heartRate,
+    sleepHours,
+    stress,
+    exerciseMinutes,
+    symptoms: { chestPain, shortnessBreath, dizziness, palpitations },
+    score,
+    levelClass,
+    levelLabel: level,
+    message
   };
 
   addCheckinToHistory(checkinEntry);
-
-  // Refresh all data-driven sections (dashboard, trend, history)
   refreshAll();
+
+  // Re-enable the submit button after a short delay matching the animation
+  setTimeout(function () {
+    submitBtn.disabled    = false;
+    submitBtn.textContent = "Calculate My Heart Score";
+  }, 900);
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
-// SECTION 4 – Score Animation & Breakdown
+// SECTION 5 – Score Animation & Breakdown
 // ══════════════════════════════════════════════════════════════════════════════
 
-// Counts the displayed score up from 0 to finalScore over ~900ms.
-// Uses requestAnimationFrame for smooth 60fps animation — no setInterval needed.
+// Counts the score number from 0 up to finalScore over ~900ms using
+// requestAnimationFrame for a smooth, 60fps ease-out animation.
 function animateScore(finalScore) {
   const duration  = 900;
   const startTime = Date.now();
@@ -266,7 +342,7 @@ function animateScore(finalScore) {
   requestAnimationFrame(step);
 }
 
-// Builds the score breakdown <li> items in the result card.
+// Populates the score breakdown list inside the result card
 function buildBreakdown(breakdown) {
   breakdownList.innerHTML = "";
 
@@ -292,17 +368,16 @@ function buildBreakdown(breakdown) {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// SECTION 5 – Today's Insights (rule-based messages)
+// SECTION 6 – Today's Insights (rule-based messages)
 // ══════════════════════════════════════════════════════════════════════════════
-// Each rule checks one aspect of the user's input and returns a typed message.
-// Type can be: "urgent" | "warning" | "tip" | "positive"
-// The CSS uses these types to colour the message with a left border.
+// Each rule checks one input and produces a typed message.
+// Type: "urgent" = red border | "warning" = amber | "tip" = blue | "positive" = green
 
 function buildInsights(inputs) {
   const { sleepHours, stress, exerciseMinutes, chestPain, shortnessBreath, dizziness, palpitations } = inputs;
   const messages = [];
 
-  // Severe cardiac symptoms — always checked first and flagged as urgent
+  // Urgent: serious cardiac symptoms — check first, flag prominently
   if (chestPain || shortnessBreath || dizziness) {
     messages.push({
       type: "urgent",
@@ -310,23 +385,23 @@ function buildInsights(inputs) {
     });
   }
 
-  // Palpitations — notable but not always dangerous; worth mentioning
+  // Palpitations: often harmless but worth noting
   if (palpitations) {
     messages.push({
       type: "warning",
-      text: "💓 You noted heart palpitations today. While these are often harmless, frequent or intense palpitations should be discussed with a doctor."
+      text: "💓 You noted heart palpitations today. While these are often benign, frequent or intense episodes should be discussed with a doctor."
     });
   }
 
-  // Low sleep — raises blood pressure and cardiovascular risk
+  // Low sleep: raises blood pressure and cardiovascular risk
   if (sleepHours < 6) {
     messages.push({
       type: "warning",
-      text: "🌙 You got under 6 hours of sleep last night. Sleep deprivation increases blood pressure and cardiovascular risk. Aim for 7–9 hours tonight."
+      text: "🌙 You got under 6 hours of sleep. Sleep deprivation increases blood pressure and cardiovascular risk. Aim for 7–9 hours tonight."
     });
   }
 
-  // High stress — two tiers (very high vs moderately high)
+  // High stress: two severity tiers
   if (stress >= 8) {
     messages.push({
       type: "warning",
@@ -339,7 +414,7 @@ function buildInsights(inputs) {
     });
   }
 
-  // Low exercise — two tiers (none vs some but under 30 min)
+  // Low exercise: two severity tiers
   if (exerciseMinutes < 15) {
     messages.push({
       type: "tip",
@@ -352,7 +427,7 @@ function buildInsights(inputs) {
     });
   }
 
-  // If no issues were found, show a positive message
+  // All clear — show a positive message when no issues found
   if (messages.length === 0) {
     messages.push({
       type: "positive",
@@ -363,60 +438,55 @@ function buildInsights(inputs) {
   return messages;
 }
 
-// Populates the insight card inside the result card.
 function renderInsights(inputs) {
   const messages = buildInsights(inputs);
-
-  // Build one <li> per insight message using its type as the CSS class
   insightList.innerHTML = messages.map(function (item) {
     return `<li class="insight-item ${item.type}">${item.text}</li>`;
   }).join("");
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// SECTION 6 – Dashboard Summary Cards
+// SECTION 7 – Dashboard Summary Cards
 // ══════════════════════════════════════════════════════════════════════════════
-// Reads saved history and fills in the four stat cards at the top of the page.
+// Always visible. Shows "--" / "0" placeholders when no history exists.
 
 function updateDashboard() {
   const history = loadHistory();
 
-  // Hide the dashboard when there is no data
   if (history.length === 0) {
-    dashboardSection.classList.add("hidden");
+    // Placeholder state: all dashes, neutral grey colour
+    dashLatestScore.textContent = "--";
+    dashLatestScore.className   = "dash-value";
+    dashAvgScore.textContent    = "--";
+    dashAvgScore.className      = "dash-value";
+    dashTotal.textContent       = "0";
+    dashTotal.className         = "dash-value filled";
+    dashConcern.textContent     = "--";
+    dashConcern.className       = "dash-value";
     return;
   }
 
-  dashboardSection.classList.remove("hidden");
-
-  const latest = history[0]; // history is newest-first, so [0] is the latest
-  const total  = history.length;
-
-  // Average score: sum all scores and divide by the count
+  const latest   = history[0]; // newest first
+  const total    = history.length;
   const avgScore = Math.round(
-    history.reduce(function (sum, entry) { return sum + entry.score; }, 0) / total
+    history.reduce(function (sum, e) { return sum + e.score; }, 0) / total
   );
 
-  // Update the Latest Score card (coloured by its concern level)
   dashLatestScore.textContent = latest.score + "/100";
   dashLatestScore.className   = "dash-value score-" + latest.levelClass;
 
-  // Update the Average Score card (coloured by whether the average is good or not)
   dashAvgScore.textContent = avgScore + "/100";
   dashAvgScore.className   = "dash-value score-" + scoreToLevelClass(avgScore);
 
-  // Update Total Check-Ins (plain number, no colour needed)
   dashTotal.textContent = total;
-  dashTotal.className   = "dash-value";
+  dashTotal.className   = "dash-value filled";
 
-  // Update Latest Concern (short label, coloured by level)
   const SHORT_CONCERN = { low: "Low ✅", medium: "Medium ⚠️", high: "High 🚨" };
   dashConcern.textContent = SHORT_CONCERN[latest.levelClass] || latest.levelLabel;
   dashConcern.className   = "dash-value concern-" + latest.levelClass;
 }
 
-// Helper: converts a numeric score (0–100) to a CSS class name ("low"/"medium"/"high").
-// Used to colour score values in the dashboard.
+// Converts a 0–100 score to a CSS colour class name
 function scoreToLevelClass(score) {
   if (score >= 75) return "low";
   if (score >= 45) return "medium";
@@ -424,34 +494,26 @@ function scoreToLevelClass(score) {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// SECTION 7 – Score Trend Bars
+// SECTION 8 – Score Trend Bars
 // ══════════════════════════════════════════════════════════════════════════════
-// Reads the most recent 5 check-ins and draws each as a CSS horizontal bar.
-// No external chart library — just plain HTML divs styled with CSS.
+// Always visible. Shows an empty-state message until the first check-in.
+// No external chart library — pure HTML/CSS horizontal bars with animation.
 
 function renderTrend() {
   const history = loadHistory();
 
-  // Hide the trend section when there is no data
   if (history.length === 0) {
-    trendSection.classList.add("hidden");
+    trendBars.innerHTML = '<p class="empty-state">Your score trend will appear here after your first check-in. ❤️</p>';
     return;
   }
 
-  trendSection.classList.remove("hidden");
-
-  // history is newest-first; we take the first 5 and reverse them so the oldest
-  // appears at the TOP of the chart and the newest at the BOTTOM — reads like time
-  // flowing downward, which is the natural direction for a trend table.
+  // Take the 5 most recent entries (history is newest-first), then reverse
+  // so the oldest row appears at the TOP and newest at the BOTTOM — time flows down.
   const recent = history.slice(0, 5).reverse();
 
-  // Build one HTML row per entry using a template literal
   trendBars.innerHTML = recent.map(function (entry) {
-    // Use the compact "Jun 19" format if available, otherwise fall back to full date
     const label = entry.shortDate || entry.date;
-
-    // The CSS animation reads the score from the --target-width custom property
-    // and grows the bar from 0% to that value over 0.8 seconds.
+    // The CSS @keyframes growBar reads --target-width to animate the bar
     return `
       <div class="trend-row">
         <span class="trend-date">${label}</span>
@@ -465,26 +527,26 @@ function renderTrend() {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// SECTION 8 – Check-In History Cards
+// SECTION 9 – Check-In History Cards
 // ══════════════════════════════════════════════════════════════════════════════
+// Always visible. Shows an empty-state message until the first check-in.
 
 function renderHistory() {
   const history = loadHistory();
 
   if (history.length === 0) {
-    historySection.classList.add("hidden");
+    historyCount.textContent = "";
+    historyList.innerHTML    = '<p class="empty-state">No check-ins yet.<br>Complete your first check-in above to start tracking your heart health! 💪</p>';
     return;
   }
 
-  historySection.classList.remove("hidden");
   historyCount.textContent =
     history.length === 1 ? "1 check-in saved" : history.length + " check-ins saved";
 
-  // Build the HTML for every history card and inject it all at once
   historyList.innerHTML = history.map(buildHistoryCardHTML).join("");
 }
 
-// Returns the full HTML string for a single history card entry.
+// Builds the HTML string for a single history card
 function buildHistoryCardHTML(entry) {
   const symptomLabels = {
     chestPain:       "Chest pain",
@@ -493,7 +555,6 @@ function buildHistoryCardHTML(entry) {
     palpitations:    "Palpitations"
   };
 
-  // Filter to only the symptoms that were checked (value === true)
   const checkedSymptoms = Object.keys(symptomLabels).filter(function (key) {
     return entry.symptoms[key] === true;
   });
@@ -531,44 +592,59 @@ function buildHistoryCardHTML(entry) {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// SECTION 9 – Shared Refresh & Reset
+// SECTION 10 – Shared Refresh, Reset & Clear
 // ══════════════════════════════════════════════════════════════════════════════
 
-// Calls all three data-driven rendering functions together so they always stay
-// in sync with whatever is currently in localStorage.
+// refreshAll() keeps all three data-driven sections in sync with localStorage.
 function refreshAll() {
   updateDashboard();
   renderTrend();
   renderHistory();
 }
 
-// Reset button: hides the result card and scrolls back to the form.
+// Reset button: hides the result and scrolls back to the form
 resetBtn.addEventListener("click", function () {
   resultCard.classList.add("hidden");
+  resultCard.classList.remove("result-animate");
   form.reset();
 
-  // form.reset() clears inputs but doesn't fire the "input" event,
-  // so we update the slider badge and track colour manually.
+  // form.reset() clears input values but doesn't fire the "input" event,
+  // so we manually restore the slider badge and track colour.
   stressDisplay.textContent = "5";
   stressSlider.value        = "5";
   updateSliderTrack(stressSlider);
 
+  // Reset the score bar so it animates from 0 next time
+  scoreBarFill.style.transition = "none";
+  scoreBarFill.style.width      = "0%";
+
+  clearFieldErrors();
+
   form.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
-// Clear History button: asks for confirmation, wipes localStorage, re-renders.
+// Clear History: asks for confirmation, wipes localStorage, re-renders
 clearHistoryBtn.addEventListener("click", function () {
   const confirmed = confirm("Clear all check-in history? This cannot be undone.");
   if (!confirmed) return;
 
   localStorage.removeItem(STORAGE_KEY);
-  refreshAll(); // all sections will hide themselves when history is empty
+  refreshAll(); // all sections will revert to their empty states
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
-// SECTION 10 – Page Load
+// SECTION 11 – Page Load
 // ══════════════════════════════════════════════════════════════════════════════
-// This runs once when the page first loads (or after a refresh).
-// It restores the dashboard, trend, and history from whatever is in localStorage.
 
+// Display today's date in the form header
+(function renderTodayDate() {
+  const el = document.getElementById("todayDate");
+  if (el) {
+    el.textContent = new Date().toLocaleDateString("en-US", {
+      weekday: "long", month: "long", day: "numeric", year: "numeric"
+    });
+  }
+})();
+
+// Restore dashboard, trend, and history from whatever is in localStorage
 refreshAll();

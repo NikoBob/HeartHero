@@ -7,7 +7,7 @@
 
 body {
   font-family: 'Inter', Arial, sans-serif;
-  background: #fdf2f2;
+  background: #f7eeee;
   color: #1a1a1a;
   min-height: 100vh;
   line-height: 1.5;
@@ -18,26 +18,25 @@ body {
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
-  padding: 32px 16px 56px;
+  padding: 28px 16px 60px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
 /* ══ Hero Card ═══════════════════════════════════════════════════════════ */
 .hero-card {
-  background: linear-gradient(135deg, #e8001d 0%, #9b0000 100%);
+  background: linear-gradient(135deg, #e8001d 0%, #8c0000 100%);
   color: white;
-  padding: 44px 28px;
+  padding: 40px 28px 36px;
   border-radius: 28px;
   text-align: center;
-  box-shadow: 0 14px 40px rgba(180, 0, 0, 0.28);
+  box-shadow: 0 16px 48px rgba(160, 0, 0, 0.32);
 }
 
-/* Heartbeat pulse animation on the logo */
 .logo {
-  font-size: 54px;
-  margin-bottom: 14px;
+  font-size: 52px;
+  margin-bottom: 12px;
   display: inline-block;
   animation: heartbeat 1.6s ease-in-out infinite;
 }
@@ -52,24 +51,42 @@ body {
 }
 
 .hero-card h1 {
-  font-size: 46px;
+  font-size: 44px;
   font-weight: 800;
   letter-spacing: -1.5px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .subtitle {
-  font-size: 16px;
-  max-width: 480px;
-  margin: 0 auto;
-  opacity: 0.9;
+  font-size: 15.5px;
+  max-width: 460px;
+  margin: 0 auto 20px;
+  opacity: 0.88;
   line-height: 1.65;
 }
 
+/* Small pill badges in the hero */
+.hero-badges {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hero-badge {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.2px;
+}
+
 /* ══ Dashboard Summary Cards ════════════════════════════════════════════ */
-/* A 2×2 grid of stat cards shown when there is history data.             */
 .dashboard-section {
-  /* No extra wrapper styles needed — gap is handled by .app flex layout */
+  /* uses .app gap for spacing */
 }
 
 .dashboard-grid {
@@ -82,14 +99,16 @@ body {
   background: white;
   border-radius: 20px;
   padding: 18px 20px 16px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   border: 1.5px solid #f0f0f0;
+  /* Red accent line across the top of every dashboard card */
+  border-top: 3px solid #e8001d;
 }
 
 .dash-label {
   font-size: 11px;
   font-weight: 700;
-  color: #aaa;
+  color: #999;
   text-transform: uppercase;
   letter-spacing: 0.7px;
   margin-bottom: 8px;
@@ -98,51 +117,68 @@ body {
 .dash-value {
   font-size: 26px;
   font-weight: 800;
-  color: #1a1a1a;
+  color: #bbb; /* Grey when showing "--" placeholder */
   letter-spacing: -0.5px;
   line-height: 1.1;
+  transition: color 0.3s;
 }
 
-/* Colour the Latest Score and Average Score values by concern level */
-.dash-value.score-low    { color: #0f8a3a; }
-.dash-value.score-medium { color: #b87300; }
-.dash-value.score-high   { color: #c90000; }
-
-/* Colour the Latest Concern value */
-.dash-value.concern-low    { color: #0f8a3a; }
+/* Score and concern values get coloured once real data loads */
+.dash-value.score-low,
+.dash-value.concern-low  { color: #0f8a3a; }
+.dash-value.score-medium,
 .dash-value.concern-medium { color: #b87300; }
+.dash-value.score-high,
 .dash-value.concern-high   { color: #c90000; }
+/* Total check-in count: neutral dark colour */
+.dash-value.filled { color: #1a1a1a; }
 
 /* ══ Check-In Card ═══════════════════════════════════════════════════════ */
 .checkin-card {
   background: white;
   padding: 32px;
   border-radius: 28px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+}
+
+.checkin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
 }
 
 .checkin-card h2 {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
-  margin-bottom: 6px;
+}
+
+/* Today's date displayed below the "Daily Check-In" heading */
+.today-date {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e8001d;
+  margin-top: 2px;
+  margin-bottom: 10px;
+  letter-spacing: 0.1px;
 }
 
 .small-text {
-  color: #666;
-  font-size: 15px;
-  margin-bottom: 28px;
+  color: #777;
+  font-size: 14.5px;
+  margin-bottom: 26px;
 }
 
 /* ══ Form Groups ═════════════════════════════════════════════════════════ */
 .form-group {
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 
 label {
   display: block;
   font-weight: 600;
-  font-size: 15px;
-  margin-bottom: 8px;
+  font-size: 14.5px;
+  margin-bottom: 7px;
   color: #1a1a1a;
 }
 
@@ -153,9 +189,33 @@ label {
 .input-hint {
   display: block;
   font-size: 12px;
-  color: #aaa;
-  margin-top: 6px;
+  color: #bbb;
+  margin-top: 5px;
   font-weight: 400;
+}
+
+/* ══ Field Validation Errors ════════════════════════════════════════════ */
+/* Shown by JS when a field is empty or out of range.                      */
+.field-error {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #c90000;
+  margin-top: 5px;
+}
+
+/* Red border + tint when a field is flagged as invalid */
+input[type="number"].invalid {
+  border-color: #c90000 !important;
+  background: #fff8f8 !important;
+  box-shadow: 0 0 0 3px rgba(201, 0, 0, 0.1) !important;
+}
+
+/* Restore normal focus style even on invalid fields */
+input[type="number"].invalid:focus {
+  border-color: #e8001d !important;
+  box-shadow: 0 0 0 3px rgba(232, 0, 29, 0.12) !important;
+  background: white !important;
 }
 
 /* ══ Number Inputs ═══════════════════════════════════════════════════════ */
@@ -190,7 +250,7 @@ input[type="range"] {
   width: 100%;
   height: 6px;
   border-radius: 6px;
-  background: #e0e0e0; /* JS overrides this with a gradient fill */
+  background: #e0e0e0; /* JS sets this to a red gradient fill */
   cursor: pointer;
   margin-top: 8px;
 }
@@ -239,7 +299,7 @@ input[type="range"]::-moz-range-thumb {
 
 .stress-out-of {
   font-weight: 400;
-  color: #888;
+  color: #999;
   font-size: 14px;
   margin-left: 3px;
 }
@@ -248,7 +308,7 @@ input[type="range"]::-moz-range-thumb {
   display: flex;
   justify-content: space-between;
   font-size: 12px;
-  color: #bbb;
+  color: #ccc;
   margin-top: 6px;
   font-weight: 400;
 }
@@ -264,13 +324,13 @@ input[type="range"]::-moz-range-thumb {
 
 .symptoms-title {
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14.5px;
   margin-bottom: 4px;
 }
 
 .symptoms-subtitle {
   font-size: 13px;
-  color: #999;
+  color: #aaa;
   margin-bottom: 14px;
   font-weight: 400;
 }
@@ -280,8 +340,8 @@ input[type="range"]::-moz-range-thumb {
   align-items: center;
   gap: 12px;
   font-weight: 400;
-  font-size: 15px;
-  margin-bottom: 8px;
+  font-size: 14.5px;
+  margin-bottom: 6px;
   cursor: pointer;
   padding: 9px 10px;
   border-radius: 10px;
@@ -307,7 +367,7 @@ input[type="range"]::-moz-range-thumb {
 /* ══ Submit Button ═══════════════════════════════════════════════════════ */
 button[type="submit"] {
   width: 100%;
-  background: linear-gradient(135deg, #e8001d, #a80015);
+  background: linear-gradient(135deg, #e8001d, #a00012);
   color: white;
   border: none;
   padding: 16px;
@@ -316,19 +376,26 @@ button[type="submit"] {
   font-weight: 700;
   font-family: inherit;
   cursor: pointer;
-  letter-spacing: 0.2px;
-  box-shadow: 0 4px 18px rgba(232, 0, 29, 0.35);
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 20px rgba(232, 0, 29, 0.35);
   transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
 }
 
-button[type="submit"]:hover {
+button[type="submit"]:hover:not(:disabled) {
   opacity: 0.91;
   transform: translateY(-1px);
-  box-shadow: 0 6px 22px rgba(232, 0, 29, 0.45);
+  box-shadow: 0 6px 24px rgba(232, 0, 29, 0.45);
 }
 
-button[type="submit"]:active {
+button[type="submit"]:active:not(:disabled) {
   transform: translateY(0);
+}
+
+/* Loading / disabled state while the score is being calculated */
+button[type="submit"]:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* ══ Result Card ═════════════════════════════════════════════════════════ */
@@ -342,44 +409,54 @@ button[type="submit"]:active {
   transition: background 0.4s, border-color 0.4s;
 }
 
-.result-card h3 {
-  font-size: 14px;
+/* Smooth entrance animation — triggered by JS adding the .result-animate class */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.result-card.result-animate {
+  animation: fadeSlideUp 0.38s ease-out;
+}
+
+.result-label {
+  font-size: 11px;
   font-weight: 700;
-  color: #999;
-  margin-bottom: 4px;
+  color: #bbb;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
 }
 
 .score-number {
-  font-size: 68px;
+  font-size: 72px;
   font-weight: 800;
-  letter-spacing: -2px;
-  margin: 6px 0;
+  letter-spacing: -3px;
+  margin: 4px 0 2px;
   transition: color 0.4s;
 }
 
 /* ══ Score Progress Bar ══════════════════════════════════════════════════ */
 .score-bar {
   width: 100%;
-  height: 8px;
-  background: #e8e8e8;
-  border-radius: 8px;
+  height: 9px;
+  background: #ebebeb;
+  border-radius: 9px;
   overflow: hidden;
   margin: 0 0 18px;
 }
 
 .score-bar-fill {
   height: 100%;
-  border-radius: 8px;
+  border-radius: 9px;
   width: 0%;
-  transition: width 1s ease;
+  transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .risk-level {
   font-size: 22px;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .feedback {
@@ -393,17 +470,17 @@ button[type="submit"]:active {
 /* ══ Result colour themes (low / medium / high) ══════════════════════════ */
 .result-card.low  { background: #f0fff5; border-color: #b2f0cb; }
 .result-card.low .score-number,
-.result-card.low .risk-level   { color: #0f8a3a; }
+.result-card.low .risk-level     { color: #0f8a3a; }
 .result-card.low .score-bar-fill { background: linear-gradient(90deg, #22e05e, #0f8a3a); }
 
 .result-card.medium { background: #fffdf0; border-color: #ffe9a0; }
 .result-card.medium .score-number,
-.result-card.medium .risk-level { color: #b87300; }
+.result-card.medium .risk-level    { color: #b87300; }
 .result-card.medium .score-bar-fill { background: linear-gradient(90deg, #ffd430, #b87300); }
 
 .result-card.high { background: #fff5f5; border-color: #ffc6c6; }
 .result-card.high .score-number,
-.result-card.high .risk-level   { color: #c90000; }
+.result-card.high .risk-level     { color: #c90000; }
 .result-card.high .score-bar-fill { background: linear-gradient(90deg, #ff6b6b, #c90000); }
 
 /* ══ Score Breakdown ═════════════════════════════════════════════════════ */
@@ -413,14 +490,14 @@ button[type="submit"]:active {
   border: 1.5px solid #ebebeb;
   border-radius: 14px;
   padding: 16px 18px;
-  margin: 0 auto 18px;
+  margin: 0 auto 16px;
   max-width: 480px;
 }
 
 .breakdown-title {
   font-size: 11px;
   font-weight: 700;
-  color: #aaa;
+  color: #bbb;
   text-transform: uppercase;
   letter-spacing: 0.8px;
   margin-bottom: 10px;
@@ -435,9 +512,9 @@ button[type="submit"]:active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 13.5px;
+  font-size: 13px;
   padding: 7px 0;
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: 1px solid #f4f4f4;
   color: #333;
   gap: 12px;
 }
@@ -458,11 +535,10 @@ button[type="submit"]:active {
 }
 
 /* ══ Today's Insight Card ════════════════════════════════════════════════ */
-/* This card sits inside the result card and shows rule-based health tips. */
 .insight-card {
   text-align: left;
-  background: #f8f9ff;
-  border: 1.5px solid #e2e6ff;
+  background: #f6f8ff;
+  border: 1.5px solid #dde3ff;
   border-radius: 14px;
   padding: 16px 18px;
   margin: 0 auto 20px;
@@ -483,41 +559,21 @@ button[type="submit"]:active {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
 }
 
-/* Each insight message has a coloured left border indicating its severity */
 .insight-item {
   font-size: 13.5px;
   line-height: 1.6;
-  padding: 10px 12px;
+  padding: 10px 13px;
   border-radius: 10px;
   border-left: 3px solid transparent;
 }
 
-.insight-item.urgent {
-  background: #fff0f0;
-  color: #a30000;
-  border-left-color: #c90000;
-}
-
-.insight-item.warning {
-  background: #fffbf0;
-  color: #7a4900;
-  border-left-color: #e6a800;
-}
-
-.insight-item.tip {
-  background: #f0f7ff;
-  color: #0d47a1;
-  border-left-color: #2196f3;
-}
-
-.insight-item.positive {
-  background: #f0fff5;
-  color: #0a6629;
-  border-left-color: #0f8a3a;
-}
+.insight-item.urgent  { background: #fff0f0; color: #a30000; border-left-color: #c90000; }
+.insight-item.warning { background: #fffbf0; color: #7a4900; border-left-color: #e6a800; }
+.insight-item.tip     { background: #f0f7ff; color: #0d47a1; border-left-color: #2196f3; }
+.insight-item.positive { background: #f0fff5; color: #0a6629; border-left-color: #0f8a3a; }
 
 /* ══ Reset / Check-In-Again Button ══════════════════════════════════════ */
 .reset-btn {
@@ -539,22 +595,30 @@ button[type="submit"]:active {
   color: white;
 }
 
+/* ══ Empty State message ════════════════════════════════════════════════ */
+/* Used in the trend and history sections when no check-ins exist yet.     */
+.empty-state {
+  text-align: center;
+  color: #ccc;
+  font-size: 14px;
+  padding: 28px 16px;
+  line-height: 1.65;
+}
+
 /* ══ Score Trend Section ═════════════════════════════════════════════════ */
-/* Shows the most recent 5 scores as horizontal CSS bars.                  */
 .trend-section {
   background: white;
-  padding: 28px 32px;
+  padding: 26px 28px;
   border-radius: 28px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
 }
 
 .trend-section h2 {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   margin-bottom: 4px;
 }
 
-/* Each row: date label | bar track | score number */
 .trend-bars {
   display: flex;
   flex-direction: column;
@@ -578,31 +642,27 @@ button[type="submit"]:active {
   text-overflow: ellipsis;
 }
 
-/* Grey track that the coloured bar sits inside */
 .trend-bar-wrap {
   flex: 1;
   height: 22px;
-  background: #f0f0f0;
+  background: #f2f2f2;
   border-radius: 11px;
   overflow: hidden;
 }
 
-/* The bar itself — width is set as an inline style by JS */
 .trend-bar {
   height: 100%;
   border-radius: 11px;
   min-width: 6px;
-  /* CSS animation: bar grows from 0 to its target width when it appears */
+  /* CSS animation: bar grows from 0 to --target-width over 0.8s */
   animation: growBar 0.8s ease-out forwards;
 }
 
-/* The CSS custom property --target-width is set inline by JS */
 @keyframes growBar {
   from { width: 0%; }
   to   { width: var(--target-width, 100%); }
 }
 
-/* Bar colours match the concern level */
 .trend-bar.low    { background: linear-gradient(90deg, #22e05e, #0f8a3a); }
 .trend-bar.medium { background: linear-gradient(90deg, #ffd430, #b87300); }
 .trend-bar.high   { background: linear-gradient(90deg, #ff6b6b, #c90000); }
@@ -619,28 +679,28 @@ button[type="submit"]:active {
 /* ══ Check-In History Section ════════════════════════════════════════════ */
 .history-section {
   background: white;
-  padding: 28px 32px;
+  padding: 26px 28px;
   border-radius: 28px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
 }
 
 .history-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   gap: 12px;
 }
 
 .history-header h2 {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   margin-bottom: 4px;
 }
 
 .history-count {
   font-size: 13px;
-  color: #999;
+  color: #aaa;
   font-weight: 400;
 }
 
@@ -648,9 +708,9 @@ button[type="submit"]:active {
   background: transparent;
   color: #c90000;
   border: 1.5px solid #ffc6c6;
-  padding: 8px 16px;
+  padding: 8px 14px;
   border-radius: 10px;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
@@ -677,6 +737,11 @@ button[type="submit"]:active {
   border-radius: 14px;
   padding: 16px 18px;
   background: #fafafa;
+  transition: box-shadow 0.2s;
+}
+
+.history-card:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
 }
 
 .history-card.low    { border-left-color: #0f8a3a; background: #f7fff9; }
@@ -710,9 +775,9 @@ button[type="submit"]:active {
 .history-card.high   .history-score { color: #c90000; }
 
 .history-score-label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  color: #aaa;
+  color: #ccc;
 }
 
 .history-meta {
@@ -723,7 +788,7 @@ button[type="submit"]:active {
 }
 
 .history-level-badge {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   color: #444;
 }
@@ -734,11 +799,11 @@ button[type="submit"]:active {
 .history-stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 16px;
+  gap: 6px 14px;
   margin-bottom: 10px;
 }
 
-.history-stat        { font-size: 13px; color: #555; }
+.history-stat        { font-size: 13px; color: #666; }
 .history-stat strong { color: #1a1a1a; }
 
 .history-symptoms {
@@ -755,12 +820,12 @@ button[type="submit"]:active {
   border-radius: 20px;
   padding: 3px 10px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .no-symptoms {
   font-size: 12px;
-  color: #bbb;
+  color: #ccc;
   margin-top: 4px;
 }
 
@@ -773,15 +838,17 @@ button[type="submit"]:active {
 }
 
 .disclaimer-heading {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   color: #c00;
   margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .disclaimer {
   font-size: 13px;
-  color: #666;
+  color: #777;
   line-height: 1.65;
 }
 
@@ -792,16 +859,16 @@ button[type="submit"]:active {
 
 /* ══ Responsive (mobile) ════════════════════════════════════════════════ */
 @media (max-width: 600px) {
-  .hero-card h1    { font-size: 36px; }
-  .hero-card       { padding: 34px 20px; }
-  .checkin-card    { padding: 24px 18px; }
-  .score-number    { font-size: 54px; }
-  .trend-section   { padding: 24px 18px; }
-  .history-section { padding: 24px 18px; }
+  .hero-card        { padding: 32px 20px 28px; }
+  .hero-card h1     { font-size: 36px; }
+  .checkin-card     { padding: 22px 18px; }
+  .score-number     { font-size: 58px; }
+  .trend-section    { padding: 22px 18px; }
+  .history-section  { padding: 22px 18px; }
 
-  /* On small screens, show 2 columns side-by-side (still fits fine) */
   .dashboard-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 
   .dash-value {
@@ -809,7 +876,7 @@ button[type="submit"]:active {
   }
 
   .trend-date {
-    width: 48px;
+    width: 46px;
     font-size: 11px;
   }
 }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HeartHero</title>
+  <title>HeartHero — Daily Heart-Health Check-In</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -20,35 +20,35 @@
         Your daily heart-health check-in. Track habits, spot patterns,
         and stay aware — in under a minute.
       </p>
+      <div class="hero-badges">
+        <span class="hero-badge">📊 Dashboard</span>
+        <span class="hero-badge">📈 Trends</span>
+        <span class="hero-badge">💡 Insights</span>
+      </div>
     </section>
 
     <!-- ══ Dashboard Summary Cards ═════════════════════════════════════════ -->
-    <!-- Hidden until there is at least one saved check-in in localStorage.  -->
-    <!-- JS shows this section and fills in the numbers after each check-in. -->
-    <section id="dashboardSection" class="dashboard-section hidden">
+    <!-- Always visible. Shows "--" placeholders until the first check-in.   -->
+    <section id="dashboardSection" class="dashboard-section">
       <div class="dashboard-grid">
 
         <div class="dash-card">
-          <p class="dash-label">Latest Score</p>
-          <!-- JS fills this with e.g. "82/100" -->
+          <p class="dash-label">🏅 Latest Score</p>
           <p id="dashLatestScore" class="dash-value">--</p>
         </div>
 
         <div class="dash-card">
-          <p class="dash-label">Average Score</p>
-          <!-- JS fills this with the average across all saved check-ins -->
+          <p class="dash-label">📊 Average Score</p>
           <p id="dashAvgScore" class="dash-value">--</p>
         </div>
 
         <div class="dash-card">
-          <p class="dash-label">Total Check-Ins</p>
-          <!-- JS fills this with the count of saved entries -->
-          <p id="dashTotal" class="dash-value">--</p>
+          <p class="dash-label">📅 Total Check-Ins</p>
+          <p id="dashTotal" class="dash-value">0</p>
         </div>
 
         <div class="dash-card">
-          <p class="dash-label">Latest Concern</p>
-          <!-- JS fills this and colours it green / amber / red -->
+          <p class="dash-label">🎯 Latest Concern</p>
           <p id="dashConcern" class="dash-value">--</p>
         </div>
 
@@ -57,12 +57,19 @@
 
     <!-- ══ Daily Check-In Form ════════════════════════════════════════════ -->
     <section class="checkin-card">
-      <h2>Daily Check-In</h2>
+
+      <div class="checkin-header">
+        <div>
+          <h2>Daily Check-In</h2>
+          <!-- JS fills in today's date here on page load -->
+          <p id="todayDate" class="today-date"></p>
+        </div>
+      </div>
       <p class="small-text">Fill in today's information to get your HeartHero Score.</p>
 
       <form id="checkinForm" novalidate>
 
-        <!-- Heart Rate -->
+        <!-- Heart Rate ─────────────────────────────────────────────────── -->
         <div class="form-group">
           <label for="heartRate">
             <span class="label-icon">💓</span> Resting Heart Rate
@@ -76,9 +83,11 @@
             required
           />
           <span class="input-hint">Normal resting range: 60 – 100 bpm</span>
+          <!-- Error message shown by JS if the value is missing or out of range -->
+          <span id="heartRateError" class="field-error hidden"></span>
         </div>
 
-        <!-- Sleep Hours -->
+        <!-- Sleep Hours ─────────────────────────────────────────────────── -->
         <div class="form-group">
           <label for="sleepHours">
             <span class="label-icon">🌙</span> Sleep Last Night (hours)
@@ -93,9 +102,10 @@
             required
           />
           <span class="input-hint">Recommended: 7 – 9 hours for adults</span>
+          <span id="sleepHoursError" class="field-error hidden"></span>
         </div>
 
-        <!-- Stress Level (range slider) -->
+        <!-- Stress Level (range slider) ─────────────────────────────────── -->
         <div class="form-group">
           <label for="stressLevel">
             <span class="label-icon">🧠</span> Stress Level:
@@ -109,7 +119,7 @@
           </div>
         </div>
 
-        <!-- Exercise Minutes -->
+        <!-- Exercise Minutes ─────────────────────────────────────────────── -->
         <div class="form-group">
           <label for="exerciseMinutes">
             <span class="label-icon">🏃</span> Exercise Today (minutes)
@@ -119,12 +129,14 @@
             id="exerciseMinutes"
             placeholder="e.g. 30"
             min="0"
+            max="300"
             required
           />
           <span class="input-hint">Recommended: at least 30 min of moderate activity</span>
+          <span id="exerciseMinutesError" class="field-error hidden"></span>
         </div>
 
-        <!-- Symptoms checkboxes -->
+        <!-- Symptoms checkboxes ─────────────────────────────────────────── -->
         <div class="symptoms-box">
           <p class="symptoms-title">⚠️ Symptoms Today</p>
           <p class="symptoms-subtitle">Check any symptoms you have noticed today.</p>
@@ -150,12 +162,12 @@
           </label>
         </div>
 
-        <button type="submit">Calculate My Heart Score</button>
+        <button type="submit" id="submitBtn">Calculate My Heart Score</button>
       </form>
 
-      <!-- ══ Result Card (hidden until form submitted) ════════════════════ -->
+      <!-- ══ Result Card (hidden until form is submitted) ════════════════ -->
       <div id="resultCard" class="result-card hidden" aria-live="polite">
-        <h3>Your HeartHero Score</h3>
+        <p class="result-label">Your HeartHero Score</p>
 
         <!-- Animated score number -->
         <div id="scoreNumber" class="score-number">--</div>
@@ -177,8 +189,7 @@
           <ul id="breakdownList" class="breakdown-list"></ul>
         </div>
 
-        <!-- ══ Today's Insight ── rule-based tips based on inputs ════════ -->
-        <!-- Populated by JS every time the form is submitted.             -->
+        <!-- Today's Insight — rule-based tips from the input values -->
         <div id="insightCard" class="insight-card">
           <p class="insight-title">💡 Today's Insight</p>
           <ul id="insightList" class="insight-list"></ul>
@@ -190,18 +201,17 @@
     </section>
 
     <!-- ══ Score Trend ════════════════════════════════════════════════════ -->
-    <!-- Shows the most recent 5 scores as horizontal CSS bars.            -->
-    <!-- Hidden until at least one check-in is saved.                      -->
-    <section id="trendSection" class="trend-section hidden">
+    <!-- Always visible. Shows an empty-state message before first check-in. -->
+    <section id="trendSection" class="trend-section">
       <h2>📈 Recent Score Trend</h2>
       <p class="small-text">Your last 5 check-ins visualised as bars.</p>
-      <!-- JS builds one row per recent check-in here -->
+      <!-- JS builds one row per recent check-in, or an empty-state message -->
       <div id="trendBars" class="trend-bars"></div>
     </section>
 
     <!-- ══ Check-In History ══════════════════════════════════════════════ -->
-    <!-- Hidden until at least one check-in is saved.                      -->
-    <section id="historySection" class="history-section hidden">
+    <!-- Always visible. Shows a friendly empty-state before first check-in. -->
+    <section id="historySection" class="history-section">
 
       <div class="history-header">
         <div>
@@ -211,13 +221,12 @@
         <button type="button" id="clearHistoryBtn" class="clear-btn">🗑 Clear All</button>
       </div>
 
-      <!-- JS builds and inserts one card per saved check-in here -->
+      <!-- JS builds and inserts one card per saved check-in, or an empty-state -->
       <div id="historyList" class="history-list"></div>
 
     </section>
 
     <!-- ══ Medical Disclaimer ════════════════════════════════════════════ -->
-    <!-- Always visible at the bottom of the page.                         -->
     <div class="disclaimer-box">
       <p class="disclaimer-heading">⚕️ Medical Disclaimer</p>
       <p class="disclaimer">
