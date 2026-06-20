@@ -160,6 +160,26 @@
       </div>
 
     </section>
+
+    <!-- ══ Check-In History ══════════════════════════════════════════════ -->
+    <!-- This section is hidden by default. JS shows it when there is saved data. -->
+    <section id="historySection" class="history-section hidden">
+
+      <div class="history-header">
+        <div>
+          <h2>📋 Check-In History</h2>
+          <!-- JS fills this in with "X check-ins saved" -->
+          <p id="historyCount" class="history-count"></p>
+        </div>
+        <!-- Removes all saved entries from localStorage -->
+        <button type="button" id="clearHistoryBtn" class="clear-btn">🗑 Clear All</button>
+      </div>
+
+      <!-- JS builds and inserts one card per saved check-in here -->
+      <div id="historyList" class="history-list"></div>
+
+    </section>
+
   </main>
 
   <script src="script.js"></script>

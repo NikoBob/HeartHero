@@ -12,6 +12,42 @@ const feedbackEl    = document.getElementById("feedback");
 const breakdownList = document.getElementById("breakdownList");
 const resetBtn      = document.getElementById("resetBtn");
 
+// History section elements
+const historySection   = document.getElementById("historySection");
+const historyList      = document.getElementById("historyList");
+const historyCount     = document.getElementById("historyCount");
+const clearHistoryBtn  = document.getElementById("clearHistoryBtn");
+
+// ══ localStorage Key ══════════════════════════════════════════════════════════
+// All check-in history is stored under this single key in localStorage.
+// Using a constant makes it easy to rename if needed without hunting through code.
+const STORAGE_KEY = "hearthero_checkins";
+
+// ══ localStorage Helper Functions ════════════════════════════════════════════
+// localStorage can only store plain text strings, so we use:
+//   JSON.stringify() to convert a JavaScript array/object → text before saving
+//   JSON.parse()     to convert that text back → a JavaScript array/object when loading
+
+// Returns the saved history array, or an empty array if nothing is saved yet.
+function loadHistory() {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  // If nothing has been saved yet, getItem returns null — we return [] instead
+  return stored ? JSON.parse(stored) : [];
+}
+
+// Saves the full history array to localStorage as a JSON string.
+function saveHistory(entries) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+}
+
+// Adds a single new check-in entry to the front of the saved list
+// so the newest entry always appears first.
+function addCheckinToHistory(entry) {
+  const history = loadHistory();
+  history.unshift(entry);   // unshift() adds to the beginning of the array
+  saveHistory(history);
+}
+
 // ══ Slider – live badge & coloured track update ═══════════════════════════════
 // This runs every time the user moves the stress slider.
 stressSlider.addEventListener("input", function () {
@@ -182,13 +218,53 @@ form.addEventListener("submit", function (event) {
   // ── Show the result card and scroll to it smoothly ────────────────────────
   resultCard.classList.remove("hidden");
   resultCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+  // ══ Save this check-in to localStorage ═══════════════════════════════════
+  // We build a check-in object containing everything the user entered plus
+  // the calculated score and level. This object gets stored as part of the
+  // history array so the user can review it after refreshing the page.
+
+  // Format today's date and time into readable strings for the history card.
+  // toLocaleDateString / toLocaleTimeString use the browser's locale settings.
+  const now  = new Date();
+  const date = now.toLocaleDateString("en-US", {
+    weekday: "short", month: "short", day: "numeric", year: "numeric"
+  });
+  const time = now.toLocaleTimeString("en-US", {
+    hour: "2-digit", minute: "2-digit"
+  });
+
+  // The check-in entry object — everything we want to remember about this session
+  const checkinEntry = {
+    id:              now.getTime(),  // unique number based on current timestamp
+    date:            date,
+    time:            time,
+    heartRate:       heartRate,
+    sleepHours:      sleepHours,
+    stress:          stress,
+    exerciseMinutes: exerciseMinutes,
+    // Store symptoms as an object with boolean values so we can loop over them later
+    symptoms: {
+      chestPain:       chestPain,
+      shortnessBreath: shortnessBreath,
+      dizziness:       dizziness,
+      palpitations:    palpitations
+    },
+    score:       score,
+    levelClass:  levelClass,   // "low" / "medium" / "high" — used for CSS classes
+    levelLabel:  level          // "✅ Low Concern" etc. — displayed as text
+  };
+
+  // Add the new entry to the saved history and update the history section on screen
+  addCheckinToHistory(checkinEntry);
+  renderHistory();
 });
 
 // ══ animateScore – counts the score number up from 0 to the final value ══════
 // requestAnimationFrame creates a smooth animation that matches the screen's
 // refresh rate (typically 60 fps) without using slow setInterval timers.
 function animateScore(finalScore) {
-  const duration = 900;     // Total time for the animation in milliseconds
+  const duration  = 900;     // Total time for the animation in milliseconds
   const startTime = Date.now();
 
   function step() {
@@ -217,9 +293,9 @@ function buildBreakdown(breakdown) {
   breakdownList.innerHTML = "";
 
   breakdown.forEach(function (item) {
-    const li          = document.createElement("li");
-    const labelSpan   = document.createElement("span");
-    const pointsSpan  = document.createElement("span");
+    const li         = document.createElement("li");
+    const labelSpan  = document.createElement("span");
+    const pointsSpan = document.createElement("span");
 
     labelSpan.textContent = item.label;
 
@@ -257,3 +333,103 @@ resetBtn.addEventListener("click", function () {
   // Scroll back to the top of the form so the user can fill it in again
   form.scrollIntoView({ behavior: "smooth", block: "start" });
 });
+
+// ══ renderHistory – reads localStorage and draws all history cards ════════════
+// This function is called on page load (to restore saved data) and after every
+// new check-in (to add the newest card to the top of the list).
+function renderHistory() {
+  const history = loadHistory();
+
+  // If there are no saved entries, hide the whole history section
+  if (history.length === 0) {
+    historySection.classList.add("hidden");
+    return;
+  }
+
+  // Show the history section and update the count subtitle
+  historySection.classList.remove("hidden");
+  historyCount.textContent =
+    history.length === 1
+      ? "1 check-in saved"
+      : history.length + " check-ins saved";
+
+  // Build the HTML string for every card, then set it all at once.
+  // Using .map() creates a new array of HTML strings, and .join("") combines
+  // them into one big string with no separator between cards.
+  historyList.innerHTML = history.map(buildHistoryCardHTML).join("");
+}
+
+// ══ buildHistoryCardHTML – returns the HTML string for one history card ════════
+// This is called once per saved check-in by renderHistory() above.
+function buildHistoryCardHTML(entry) {
+  // Map internal property names to the human-readable symptom labels
+  const symptomLabels = {
+    chestPain:       "Chest pain",
+    shortnessBreath: "Shortness of breath",
+    dizziness:       "Dizziness",
+    palpitations:    "Palpitations"
+  };
+
+  // Build an array containing only the symptoms that were checked (true)
+  // Object.keys() gives us ["chestPain", "shortnessBreath", ...] to loop over
+  const checkedSymptoms = Object.keys(symptomLabels).filter(function (key) {
+    return entry.symptoms[key] === true;
+  });
+
+  // If there were symptoms, build a row of coloured tags; otherwise show a soft message
+  let symptomsHTML;
+  if (checkedSymptoms.length > 0) {
+    // Build one <span> pill tag per checked symptom and join them together
+    const tags = checkedSymptoms.map(function (key) {
+      return '<span class="symptom-tag">' + symptomLabels[key] + "</span>";
+    }).join("");
+    symptomsHTML = '<div class="history-symptoms">' + tags + "</div>";
+  } else {
+    symptomsHTML = '<p class="no-symptoms">No symptoms reported</p>';
+  }
+
+  // Return the full HTML string for this card using a template literal.
+  // Template literals use backticks (`) and ${...} to insert variable values.
+  return `
+    <div class="history-card ${entry.levelClass}">
+      <div class="history-card-top">
+        <div class="history-score-block">
+          <span class="history-score">${entry.score}</span>
+          <span class="history-score-label">/100</span>
+        </div>
+        <div class="history-meta">
+          <span class="history-level-badge">${entry.levelLabel}</span>
+          <span class="history-date">${entry.date}</span>
+          <span class="history-time">${entry.time}</span>
+        </div>
+      </div>
+      <div class="history-stats">
+        <div class="history-stat">💓 <strong>${entry.heartRate}</strong> bpm</div>
+        <div class="history-stat">🌙 <strong>${entry.sleepHours}h</strong> sleep</div>
+        <div class="history-stat">🧠 Stress <strong>${entry.stress}/10</strong></div>
+        <div class="history-stat">🏃 <strong>${entry.exerciseMinutes} min</strong></div>
+      </div>
+      ${symptomsHTML}
+    </div>
+  `;
+}
+
+// ══ Clear History button ══════════════════════════════════════════════════════
+// Asks the user to confirm before wiping all saved data from localStorage.
+clearHistoryBtn.addEventListener("click", function () {
+  // confirm() shows a browser pop-up with OK and Cancel buttons.
+  // If the user clicks Cancel, confirm() returns false and we stop here.
+  const confirmed = confirm("Are you sure you want to clear all check-in history? This cannot be undone.");
+  if (!confirmed) return;
+
+  // Remove the HeartHero history entry from localStorage entirely
+  localStorage.removeItem(STORAGE_KEY);
+
+  // Re-render — since history is now empty, renderHistory() will hide the section
+  renderHistory();
+});
+
+// ══ On page load — restore any previously saved history ═══════════════════════
+// When the user refreshes the page, this line re-reads localStorage and
+// draws any saved check-ins so history is never lost between visits.
+renderHistory();
