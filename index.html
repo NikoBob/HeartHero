@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HeartHero</title>
-  <!-- Modern clean font from Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -13,7 +12,7 @@
 <body>
   <main class="app">
 
-    <!-- ══ Hero / Title Section ══════════════════════════════════════════ -->
+    <!-- ══ Hero / Title Section ════════════════════════════════════════════ -->
     <section class="hero-card">
       <div class="logo" aria-hidden="true">❤️</div>
       <h1>HeartHero</h1>
@@ -23,7 +22,40 @@
       </p>
     </section>
 
-    <!-- ══ Daily Check-In Form ══════════════════════════════════════════ -->
+    <!-- ══ Dashboard Summary Cards ═════════════════════════════════════════ -->
+    <!-- Hidden until there is at least one saved check-in in localStorage.  -->
+    <!-- JS shows this section and fills in the numbers after each check-in. -->
+    <section id="dashboardSection" class="dashboard-section hidden">
+      <div class="dashboard-grid">
+
+        <div class="dash-card">
+          <p class="dash-label">Latest Score</p>
+          <!-- JS fills this with e.g. "82/100" -->
+          <p id="dashLatestScore" class="dash-value">--</p>
+        </div>
+
+        <div class="dash-card">
+          <p class="dash-label">Average Score</p>
+          <!-- JS fills this with the average across all saved check-ins -->
+          <p id="dashAvgScore" class="dash-value">--</p>
+        </div>
+
+        <div class="dash-card">
+          <p class="dash-label">Total Check-Ins</p>
+          <!-- JS fills this with the count of saved entries -->
+          <p id="dashTotal" class="dash-value">--</p>
+        </div>
+
+        <div class="dash-card">
+          <p class="dash-label">Latest Concern</p>
+          <!-- JS fills this and colours it green / amber / red -->
+          <p id="dashConcern" class="dash-value">--</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══ Daily Check-In Form ════════════════════════════════════════════ -->
     <section class="checkin-card">
       <h2>Daily Check-In</h2>
       <p class="small-text">Fill in today's information to get your HeartHero Score.</p>
@@ -121,57 +153,61 @@
         <button type="submit">Calculate My Heart Score</button>
       </form>
 
-      <!-- ══ Result Card (hidden until form is submitted) ═══════════════ -->
+      <!-- ══ Result Card (hidden until form submitted) ════════════════════ -->
       <div id="resultCard" class="result-card hidden" aria-live="polite">
         <h3>Your HeartHero Score</h3>
 
         <!-- Animated score number -->
         <div id="scoreNumber" class="score-number">--</div>
 
-        <!-- Progress bar showing score visually -->
+        <!-- Progress bar that fills to the score -->
         <div class="score-bar" role="progressbar" aria-label="Heart score bar">
           <div id="scoreBarFill" class="score-bar-fill"></div>
         </div>
 
-        <!-- Risk level label (Low / Medium / High Concern) -->
+        <!-- Risk level label -->
         <p id="riskLevel" class="risk-level"></p>
 
-        <!-- Short personalised feedback message -->
+        <!-- Personalised feedback message -->
         <p id="feedback" class="feedback"></p>
 
-        <!-- Breakdown of what affected the score -->
+        <!-- Score breakdown — what added or removed points -->
         <div class="breakdown-section">
           <p class="breakdown-title">Score Breakdown</p>
           <ul id="breakdownList" class="breakdown-list"></ul>
         </div>
 
-        <button type="button" id="resetBtn" class="reset-btn">Check In Again</button>
-      </div>
+        <!-- ══ Today's Insight ── rule-based tips based on inputs ════════ -->
+        <!-- Populated by JS every time the form is submitted.             -->
+        <div id="insightCard" class="insight-card">
+          <p class="insight-title">💡 Today's Insight</p>
+          <ul id="insightList" class="insight-list"></ul>
+        </div>
 
-      <!-- ══ Medical Disclaimer ════════════════════════════════════════ -->
-      <div class="disclaimer-box">
-        <p class="disclaimer-heading">⚕️ Medical Disclaimer</p>
-        <p class="disclaimer">
-          HeartHero is a personal tracking tool, <strong>not</strong> a medical
-          diagnosis. It cannot replace a doctor's evaluation. If you experience
-          severe chest pain, difficulty breathing, sudden dizziness, or any
-          emergency symptoms — <strong>call emergency services immediately</strong>.
-        </p>
+        <button type="button" id="resetBtn" class="reset-btn">Check In Again</button>
       </div>
 
     </section>
 
+    <!-- ══ Score Trend ════════════════════════════════════════════════════ -->
+    <!-- Shows the most recent 5 scores as horizontal CSS bars.            -->
+    <!-- Hidden until at least one check-in is saved.                      -->
+    <section id="trendSection" class="trend-section hidden">
+      <h2>📈 Recent Score Trend</h2>
+      <p class="small-text">Your last 5 check-ins visualised as bars.</p>
+      <!-- JS builds one row per recent check-in here -->
+      <div id="trendBars" class="trend-bars"></div>
+    </section>
+
     <!-- ══ Check-In History ══════════════════════════════════════════════ -->
-    <!-- This section is hidden by default. JS shows it when there is saved data. -->
+    <!-- Hidden until at least one check-in is saved.                      -->
     <section id="historySection" class="history-section hidden">
 
       <div class="history-header">
         <div>
           <h2>📋 Check-In History</h2>
-          <!-- JS fills this in with "X check-ins saved" -->
           <p id="historyCount" class="history-count"></p>
         </div>
-        <!-- Removes all saved entries from localStorage -->
         <button type="button" id="clearHistoryBtn" class="clear-btn">🗑 Clear All</button>
       </div>
 
@@ -179,6 +215,18 @@
       <div id="historyList" class="history-list"></div>
 
     </section>
+
+    <!-- ══ Medical Disclaimer ════════════════════════════════════════════ -->
+    <!-- Always visible at the bottom of the page.                         -->
+    <div class="disclaimer-box">
+      <p class="disclaimer-heading">⚕️ Medical Disclaimer</p>
+      <p class="disclaimer">
+        HeartHero is a personal tracking tool, <strong>not</strong> a medical diagnosis.
+        It cannot replace a doctor's evaluation. If you are experiencing severe chest pain,
+        trouble breathing, fainting, or a medical emergency —
+        <strong>call emergency services immediately</strong>.
+      </p>
+    </div>
 
   </main>
 
