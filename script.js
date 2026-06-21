@@ -1,9 +1,28 @@
 // ══════════════════════════════════════════════════════════════════════════════
 // HeartHero — script.js
-// Sections:  1. localStorage  2. Slider  3. Validation  4. Form & Scoring
-//            5. Animation & Breakdown  6. Insights  7. Dashboard
-//            8. Trend  9. History  10. Shared Refresh & Reset  11. Page Load
+// Sections:  0. Nav Scroll    1. localStorage  2. Slider  3. Validation
+//            4. Form & Scoring  5. Animation & Breakdown  6. Insights
+//            7. Dashboard  8. Trend  9. History
+//           10. Shared Refresh & Reset  11. Page Load
 // ══════════════════════════════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 0 – Smooth Anchor Scroll
+// ══════════════════════════════════════════════════════════════════════════════
+// The CSS `scroll-behavior: smooth` on <html> handles all anchor link scrolling.
+// This block adds a small offset so sections don't hide under the sticky nav bar.
+document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+  anchor.addEventListener("click", function (e) {
+    const targetId = this.getAttribute("href");
+    const target   = document.querySelector(targetId);
+    if (!target) return;
+
+    e.preventDefault();
+    // 64px = sticky nav height — scroll stops just below it
+    const offset = target.getBoundingClientRect().top + window.scrollY - 64;
+    window.scrollTo({ top: offset, behavior: "smooth" });
+  });
+});
 
 // ══ localStorage Key ══════════════════════════════════════════════════════════
 const STORAGE_KEY = "hearthero_checkins";

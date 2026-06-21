@@ -1,42 +1,104 @@
-/* ══ Reset & Base ════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════════════
+   HeartHero — style.css
+   Structure:
+     1. Reset & Base           2. Smooth Scroll           3. Site Nav
+     4. Landing Hero           5. App Section Wrapper     6. Dashboard Cards
+     7. Check-In Form          8. Inputs & Slider         9. Symptoms & Submit
+    10. Result Card & Breakdown 11. Insights             12. Score Trend
+    13. History Cards          14. Info Sections          15. How It Works Steps
+    16. About Section          17. Tech Stack             18. Privacy Cards
+    19. Site Footer            20. Utility                21. Responsive
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* ══ 1. Reset & Base ════════════════════════════════════════════════════ */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth; /* Enables smooth scrolling for all anchor links */
+}
+
 body {
   font-family: 'Inter', Arial, sans-serif;
-  background: #f7eeee;
+  background: #f5f6f7;
   color: #1a1a1a;
   min-height: 100vh;
   line-height: 1.5;
 }
 
-/* ══ App Layout ══════════════════════════════════════════════════════════ */
-.app {
-  width: 100%;
-  max-width: 700px;
+/* ══ 3. Site Navigation ═════════════════════════════════════════════════ */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid #efefef;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.06);
+}
+
+.nav-inner {
+  max-width: 960px;
   margin: 0 auto;
-  padding: 28px 16px 60px;
+  padding: 0 20px;
+  height: 56px;
   display: flex;
-  flex-direction: column;
-  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/* ══ Hero Card ═══════════════════════════════════════════════════════════ */
-.hero-card {
-  background: linear-gradient(135deg, #e8001d 0%, #8c0000 100%);
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #1a1a1a;
+  text-decoration: none;
+  letter-spacing: -0.3px;
+}
+
+.nav-logo {
+  font-size: 18px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+}
+
+.nav-links a {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  text-decoration: none;
+  transition: color 0.18s;
+}
+
+.nav-links a:hover {
+  color: #e8001d;
+}
+
+/* ══ 4. Landing Hero ════════════════════════════════════════════════════ */
+.landing {
+  background: linear-gradient(150deg, #e8001d 0%, #7a0000 100%);
   color: white;
-  padding: 40px 28px 36px;
-  border-radius: 28px;
+  padding: 80px 24px 72px;
   text-align: center;
-  box-shadow: 0 16px 48px rgba(160, 0, 0, 0.32);
 }
 
-.logo {
-  font-size: 52px;
-  margin-bottom: 12px;
+.landing-inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.landing-logo {
+  font-size: 64px;
+  margin-bottom: 16px;
   display: inline-block;
   animation: heartbeat 1.6s ease-in-out infinite;
 }
@@ -50,43 +112,133 @@ body {
   100% { transform: scale(1); }
 }
 
-.hero-card h1 {
-  font-size: 44px;
+.landing-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 12px;
+}
+
+.landing-title {
+  font-size: 64px;
   font-weight: 800;
-  letter-spacing: -1.5px;
-  margin-bottom: 10px;
+  letter-spacing: -3px;
+  line-height: 1;
+  margin-bottom: 18px;
 }
 
-.subtitle {
-  font-size: 15.5px;
-  max-width: 460px;
-  margin: 0 auto 20px;
+.landing-desc {
+  font-size: 17px;
+  line-height: 1.7;
   opacity: 0.88;
-  line-height: 1.65;
+  max-width: 520px;
+  margin: 0 auto 32px;
 }
 
-/* Small pill badges in the hero */
-.hero-badges {
+/* CTA Buttons */
+.landing-cta {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+
+.btn-primary {
+  background: white;
+  color: #c90000;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 13px 28px;
+  border-radius: 14px;
+  text-decoration: none;
+  letter-spacing: 0.2px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s, box-shadow 0.15s;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 13px 28px;
+  border-radius: 14px;
+  text-decoration: none;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  transition: background 0.2s, border-color 0.2s;
+  display: inline-block;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 13px 20px;
+  border-radius: 14px;
+  text-decoration: none;
+  transition: color 0.2s;
+  display: inline-block;
+}
+
+.btn-ghost:hover {
+  color: white;
+}
+
+/* Feature pills row at the bottom of the landing */
+.landing-feature-pills {
   display: flex;
   justify-content: center;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.hero-badge {
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
+.feature-pill {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.9);
   font-size: 12px;
   font-weight: 600;
-  padding: 5px 12px;
+  padding: 6px 14px;
   border-radius: 20px;
   letter-spacing: 0.2px;
 }
 
-/* ══ Dashboard Summary Cards ════════════════════════════════════════════ */
+/* ══ 5. App Section Wrapper ═════════════════════════════════════════════ */
+/* Wraps the entire functional dashboard in a consistent background.       */
+.app-section {
+  background: #f5f6f7;
+  padding: 32px 0 8px;
+}
+
+/* The existing .app layout — centred column, all functional sections */
+.app {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 16px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ══ 6. Dashboard Summary Cards ════════════════════════════════════════ */
 .dashboard-section {
-  /* uses .app gap for spacing */
+  /* gap handled by .app flex */
 }
 
 .dashboard-grid {
@@ -101,7 +253,6 @@ body {
   padding: 18px 20px 16px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   border: 1.5px solid #f0f0f0;
-  /* Red accent line across the top of every dashboard card */
   border-top: 3px solid #e8001d;
 }
 
@@ -117,23 +268,18 @@ body {
 .dash-value {
   font-size: 26px;
   font-weight: 800;
-  color: #bbb; /* Grey when showing "--" placeholder */
+  color: #ccc;
   letter-spacing: -0.5px;
   line-height: 1.1;
   transition: color 0.3s;
 }
 
-/* Score and concern values get coloured once real data loads */
-.dash-value.score-low,
-.dash-value.concern-low  { color: #0f8a3a; }
-.dash-value.score-medium,
-.dash-value.concern-medium { color: #b87300; }
-.dash-value.score-high,
-.dash-value.concern-high   { color: #c90000; }
-/* Total check-in count: neutral dark colour */
+.dash-value.score-low,  .dash-value.concern-low    { color: #0f8a3a; }
+.dash-value.score-medium, .dash-value.concern-medium { color: #b87300; }
+.dash-value.score-high, .dash-value.concern-high   { color: #c90000; }
 .dash-value.filled { color: #1a1a1a; }
 
-/* ══ Check-In Card ═══════════════════════════════════════════════════════ */
+/* ══ 7. Check-In Card ═══════════════════════════════════════════════════ */
 .checkin-card {
   background: white;
   padding: 32px;
@@ -153,14 +299,12 @@ body {
   font-weight: 700;
 }
 
-/* Today's date displayed below the "Daily Check-In" heading */
 .today-date {
   font-size: 13px;
   font-weight: 600;
   color: #e8001d;
   margin-top: 2px;
   margin-bottom: 10px;
-  letter-spacing: 0.1px;
 }
 
 .small-text {
@@ -169,7 +313,7 @@ body {
   margin-bottom: 26px;
 }
 
-/* ══ Form Groups ═════════════════════════════════════════════════════════ */
+/* ══ 8. Inputs & Slider ═════════════════════════════════════════════════ */
 .form-group {
   margin-bottom: 20px;
 }
@@ -182,9 +326,7 @@ label {
   color: #1a1a1a;
 }
 
-.label-icon {
-  margin-right: 4px;
-}
+.label-icon { margin-right: 4px; }
 
 .input-hint {
   display: block;
@@ -194,8 +336,7 @@ label {
   font-weight: 400;
 }
 
-/* ══ Field Validation Errors ════════════════════════════════════════════ */
-/* Shown by JS when a field is empty or out of range.                      */
+/* Validation errors */
 .field-error {
   display: block;
   font-size: 12px;
@@ -204,21 +345,19 @@ label {
   margin-top: 5px;
 }
 
-/* Red border + tint when a field is flagged as invalid */
 input[type="number"].invalid {
   border-color: #c90000 !important;
   background: #fff8f8 !important;
   box-shadow: 0 0 0 3px rgba(201, 0, 0, 0.1) !important;
 }
 
-/* Restore normal focus style even on invalid fields */
 input[type="number"].invalid:focus {
   border-color: #e8001d !important;
   box-shadow: 0 0 0 3px rgba(232, 0, 29, 0.12) !important;
   background: white !important;
 }
 
-/* ══ Number Inputs ═══════════════════════════════════════════════════════ */
+/* Number inputs */
 input[type="number"] {
   width: 100%;
   padding: 13px 16px;
@@ -243,14 +382,14 @@ input[type="number"]::-webkit-outer-spin-button {
   opacity: 0.4;
 }
 
-/* ══ Range Slider ════════════════════════════════════════════════════════ */
+/* Range slider */
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
   height: 6px;
   border-radius: 6px;
-  background: #e0e0e0; /* JS sets this to a red gradient fill */
+  background: #e0e0e0;
   cursor: pointer;
   margin-top: 8px;
 }
@@ -313,7 +452,7 @@ input[type="range"]::-moz-range-thumb {
   font-weight: 400;
 }
 
-/* ══ Symptoms Box ════════════════════════════════════════════════════════ */
+/* ══ 9. Symptoms Box & Submit Button ════════════════════════════════════ */
 .symptoms-box {
   background: #fff8f8;
   border: 1.5px solid #ffd4d4;
@@ -348,13 +487,9 @@ input[type="range"]::-moz-range-thumb {
   transition: background 0.15s;
 }
 
-.checkbox-row:last-child {
-  margin-bottom: 0;
-}
+.checkbox-row:last-child { margin-bottom: 0; }
 
-.checkbox-row:hover {
-  background: rgba(232, 0, 29, 0.05);
-}
+.checkbox-row:hover { background: rgba(232, 0, 29, 0.05); }
 
 .checkbox-row input[type="checkbox"] {
   width: 18px;
@@ -364,7 +499,6 @@ input[type="range"]::-moz-range-thumb {
   flex-shrink: 0;
 }
 
-/* ══ Submit Button ═══════════════════════════════════════════════════════ */
 button[type="submit"] {
   width: 100%;
   background: linear-gradient(135deg, #e8001d, #a00012);
@@ -387,18 +521,15 @@ button[type="submit"]:hover:not(:disabled) {
   box-shadow: 0 6px 24px rgba(232, 0, 29, 0.45);
 }
 
-button[type="submit"]:active:not(:disabled) {
-  transform: translateY(0);
-}
+button[type="submit"]:active:not(:disabled) { transform: translateY(0); }
 
-/* Loading / disabled state while the score is being calculated */
 button[type="submit"]:disabled {
   opacity: 0.55;
   cursor: not-allowed;
   box-shadow: none;
 }
 
-/* ══ Result Card ═════════════════════════════════════════════════════════ */
+/* ══ 10. Result Card & Breakdown ════════════════════════════════════════ */
 .result-card {
   margin-top: 28px;
   padding: 28px;
@@ -409,15 +540,12 @@ button[type="submit"]:disabled {
   transition: background 0.4s, border-color 0.4s;
 }
 
-/* Smooth entrance animation — triggered by JS adding the .result-animate class */
 @keyframes fadeSlideUp {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.result-card.result-animate {
-  animation: fadeSlideUp 0.38s ease-out;
-}
+.result-card.result-animate { animation: fadeSlideUp 0.38s ease-out; }
 
 .result-label {
   font-size: 11px;
@@ -436,7 +564,6 @@ button[type="submit"]:disabled {
   transition: color 0.4s;
 }
 
-/* ══ Score Progress Bar ══════════════════════════════════════════════════ */
 .score-bar {
   width: 100%;
   height: 9px;
@@ -467,23 +594,23 @@ button[type="submit"]:disabled {
   margin: 0 auto 22px;
 }
 
-/* ══ Result colour themes (low / medium / high) ══════════════════════════ */
-.result-card.low  { background: #f0fff5; border-color: #b2f0cb; }
+/* Colour themes */
+.result-card.low    { background: #f0fff5; border-color: #b2f0cb; }
 .result-card.low .score-number,
-.result-card.low .risk-level     { color: #0f8a3a; }
+.result-card.low .risk-level    { color: #0f8a3a; }
 .result-card.low .score-bar-fill { background: linear-gradient(90deg, #22e05e, #0f8a3a); }
 
 .result-card.medium { background: #fffdf0; border-color: #ffe9a0; }
 .result-card.medium .score-number,
-.result-card.medium .risk-level    { color: #b87300; }
+.result-card.medium .risk-level   { color: #b87300; }
 .result-card.medium .score-bar-fill { background: linear-gradient(90deg, #ffd430, #b87300); }
 
-.result-card.high { background: #fff5f5; border-color: #ffc6c6; }
+.result-card.high   { background: #fff5f5; border-color: #ffc6c6; }
 .result-card.high .score-number,
-.result-card.high .risk-level     { color: #c90000; }
+.result-card.high .risk-level    { color: #c90000; }
 .result-card.high .score-bar-fill { background: linear-gradient(90deg, #ff6b6b, #c90000); }
 
-/* ══ Score Breakdown ═════════════════════════════════════════════════════ */
+/* Score Breakdown */
 .breakdown-section {
   text-align: left;
   background: white;
@@ -503,10 +630,7 @@ button[type="submit"]:disabled {
   margin-bottom: 10px;
 }
 
-.breakdown-list {
-  list-style: none;
-  padding: 0;
-}
+.breakdown-list { list-style: none; padding: 0; }
 
 .breakdown-list li {
   display: flex;
@@ -519,22 +643,11 @@ button[type="submit"]:disabled {
   gap: 12px;
 }
 
-.breakdown-list li:last-child {
-  border-bottom: none;
-}
+.breakdown-list li:last-child { border-bottom: none; }
+.breakdown-list .deduction { font-weight: 700; color: #c90000; white-space: nowrap; }
+.breakdown-list .ok        { font-weight: 700; color: #0f8a3a; }
 
-.breakdown-list .deduction {
-  font-weight: 700;
-  color: #c90000;
-  white-space: nowrap;
-}
-
-.breakdown-list .ok {
-  font-weight: 700;
-  color: #0f8a3a;
-}
-
-/* ══ Today's Insight Card ════════════════════════════════════════════════ */
+/* ══ 11. Today's Insight Card ═══════════════════════════════════════════ */
 .insight-card {
   text-align: left;
   background: #f6f8ff;
@@ -570,12 +683,11 @@ button[type="submit"]:disabled {
   border-left: 3px solid transparent;
 }
 
-.insight-item.urgent  { background: #fff0f0; color: #a30000; border-left-color: #c90000; }
-.insight-item.warning { background: #fffbf0; color: #7a4900; border-left-color: #e6a800; }
-.insight-item.tip     { background: #f0f7ff; color: #0d47a1; border-left-color: #2196f3; }
+.insight-item.urgent   { background: #fff0f0; color: #a30000; border-left-color: #c90000; }
+.insight-item.warning  { background: #fffbf0; color: #7a4900; border-left-color: #e6a800; }
+.insight-item.tip      { background: #f0f7ff; color: #0d47a1; border-left-color: #2196f3; }
 .insight-item.positive { background: #f0fff5; color: #0a6629; border-left-color: #0f8a3a; }
 
-/* ══ Reset / Check-In-Again Button ══════════════════════════════════════ */
 .reset-btn {
   display: inline-block;
   background: transparent;
@@ -590,22 +702,9 @@ button[type="submit"]:disabled {
   transition: background 0.2s, color 0.2s;
 }
 
-.reset-btn:hover {
-  background: #e8001d;
-  color: white;
-}
+.reset-btn:hover { background: #e8001d; color: white; }
 
-/* ══ Empty State message ════════════════════════════════════════════════ */
-/* Used in the trend and history sections when no check-ins exist yet.     */
-.empty-state {
-  text-align: center;
-  color: #ccc;
-  font-size: 14px;
-  padding: 28px 16px;
-  line-height: 1.65;
-}
-
-/* ══ Score Trend Section ═════════════════════════════════════════════════ */
+/* ══ 12. Score Trend Section ═════════════════════════════════════════════ */
 .trend-section {
   background: white;
   padding: 26px 28px;
@@ -613,24 +712,11 @@ button[type="submit"]:disabled {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
 }
 
-.trend-section h2 {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
+.trend-section h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
 
-.trend-bars {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 18px;
-}
+.trend-bars { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
 
-.trend-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+.trend-row { display: flex; align-items: center; gap: 12px; }
 
 .trend-date {
   font-size: 12px;
@@ -654,7 +740,6 @@ button[type="submit"]:disabled {
   height: 100%;
   border-radius: 11px;
   min-width: 6px;
-  /* CSS animation: bar grows from 0 to --target-width over 0.8s */
   animation: growBar 0.8s ease-out forwards;
 }
 
@@ -667,16 +752,9 @@ button[type="submit"]:disabled {
 .trend-bar.medium { background: linear-gradient(90deg, #ffd430, #b87300); }
 .trend-bar.high   { background: linear-gradient(90deg, #ff6b6b, #c90000); }
 
-.trend-score {
-  font-size: 14px;
-  font-weight: 700;
-  color: #333;
-  width: 32px;
-  text-align: right;
-  flex-shrink: 0;
-}
+.trend-score { font-size: 14px; font-weight: 700; color: #333; width: 32px; text-align: right; flex-shrink: 0; }
 
-/* ══ Check-In History Section ════════════════════════════════════════════ */
+/* ══ 13. History Cards ══════════════════════════════════════════════════ */
 .history-section {
   background: white;
   padding: 26px 28px;
@@ -692,17 +770,9 @@ button[type="submit"]:disabled {
   gap: 12px;
 }
 
-.history-header h2 {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
+.history-header h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
 
-.history-count {
-  font-size: 13px;
-  color: #aaa;
-  font-weight: 400;
-}
+.history-count { font-size: 13px; color: #aaa; font-weight: 400; }
 
 .clear-btn {
   background: transparent;
@@ -719,18 +789,18 @@ button[type="submit"]:disabled {
   flex-shrink: 0;
 }
 
-.clear-btn:hover {
-  background: #fff0f0;
-  border-color: #c90000;
+.clear-btn:hover { background: #fff0f0; border-color: #c90000; }
+
+.history-list { display: flex; flex-direction: column; gap: 12px; }
+
+.empty-state {
+  text-align: center;
+  color: #ccc;
+  font-size: 14px;
+  padding: 28px 16px;
+  line-height: 1.65;
 }
 
-.history-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* ── Individual history entry card ─────────────────────────────────────── */
 .history-card {
   border: 1.5px solid #ebebeb;
   border-left-width: 4px;
@@ -740,9 +810,7 @@ button[type="submit"]:disabled {
   transition: box-shadow 0.2s;
 }
 
-.history-card:hover {
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
-}
+.history-card:hover { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07); }
 
 .history-card.low    { border-left-color: #0f8a3a; background: #f7fff9; }
 .history-card.medium { border-left-color: #b87300; background: #fffef5; }
@@ -756,62 +824,27 @@ button[type="submit"]:disabled {
   gap: 12px;
 }
 
-.history-score-block {
-  display: flex;
-  align-items: baseline;
-  gap: 3px;
-  flex-shrink: 0;
-}
+.history-score-block { display: flex; align-items: baseline; gap: 3px; flex-shrink: 0; }
 
-.history-score {
-  font-size: 38px;
-  font-weight: 800;
-  letter-spacing: -1px;
-  line-height: 1;
-}
+.history-score { font-size: 38px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
 
 .history-card.low    .history-score { color: #0f8a3a; }
 .history-card.medium .history-score { color: #b87300; }
 .history-card.high   .history-score { color: #c90000; }
 
-.history-score-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: #ccc;
-}
+.history-score-label { font-size: 13px; font-weight: 500; color: #ccc; }
 
-.history-meta {
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
+.history-meta { text-align: right; display: flex; flex-direction: column; gap: 3px; }
 
-.history-level-badge {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: #444;
-}
+.history-level-badge { font-size: 12.5px; font-weight: 700; color: #444; }
+.history-date        { font-size: 12px; color: #888; }
+.history-time        { font-size: 11px; color: #bbb; }
 
-.history-date { font-size: 12px; color: #888; }
-.history-time { font-size: 11px; color: #bbb; }
-
-.history-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
-  margin-bottom: 10px;
-}
-
+.history-stats { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-bottom: 10px; }
 .history-stat        { font-size: 13px; color: #666; }
 .history-stat strong { color: #1a1a1a; }
 
-.history-symptoms {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 6px;
-}
+.history-symptoms { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 
 .symptom-tag {
   background: #fff0f0;
@@ -823,60 +856,305 @@ button[type="submit"]:disabled {
   font-weight: 600;
 }
 
-.no-symptoms {
+.no-symptoms { font-size: 12px; color: #ccc; margin-top: 4px; }
+
+/* ══ 14. Info Sections (shared wrapper) ═════════════════════════════════ */
+.info-section {
+  padding: 72px 24px;
+}
+
+.bg-light { background: #f5f6f7; }
+.bg-white { background: white; }
+
+.section-inner {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 52px;
+}
+
+.section-eyebrow {
   font-size: 12px;
-  color: #ccc;
-  margin-top: 4px;
-}
-
-/* ══ Medical Disclaimer Box ═══════════════════════════════════════════════ */
-.disclaimer-box {
-  padding: 16px 20px;
-  background: #fff8f8;
-  border: 1.5px solid #ffd4d4;
-  border-radius: 16px;
-}
-
-.disclaimer-heading {
-  font-size: 12.5px;
   font-weight: 700;
-  color: #c00;
-  margin-bottom: 6px;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  color: #e8001d;
+  margin-bottom: 10px;
 }
 
-.disclaimer {
-  font-size: 13px;
-  color: #777;
+.section-title {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #1a1a1a;
+  margin-bottom: 14px;
+}
+
+.section-subtitle {
+  font-size: 16px;
+  color: #666;
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ══ 15. How It Works — Steps Grid ══════════════════════════════════════ */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.step-card {
+  background: white;
+  border-radius: 20px;
+  padding: 28px 22px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1.5px solid #efefef;
+  border-top: 3px solid #e8001d;
+  position: relative;
+}
+
+.step-num {
+  font-size: 11px;
+  font-weight: 800;
+  color: #e8001d;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.step-icon {
+  font-size: 32px;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.step-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+}
+
+.step-card p {
+  font-size: 14px;
+  color: #555;
   line-height: 1.65;
 }
 
-/* ══ Utility ═════════════════════════════════════════════════════════════ */
-.hidden {
-  display: none;
+/* ══ 16. About Section ══════════════════════════════════════════════════ */
+.about-content {
+  max-width: 680px;
+  margin: 0 auto;
 }
 
-/* ══ Responsive (mobile) ════════════════════════════════════════════════ */
+.about-content p {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.about-quote {
+  border-left: 4px solid #e8001d;
+  padding: 16px 22px;
+  margin: 28px 0;
+  background: #fff5f5;
+  border-radius: 0 12px 12px 0;
+  font-size: 17px;
+  font-style: italic;
+  color: #c90000;
+  line-height: 1.7;
+}
+
+/* ══ 17. Tech Stack ══════════════════════════════════════════════════════ */
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.tech-card {
+  background: white;
+  border-radius: 16px;
+  padding: 22px 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  border: 1.5px solid #efefef;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tech-icon {
+  font-size: 28px;
+}
+
+.tech-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.tech-desc {
+  font-size: 13px;
+  color: #777;
+  line-height: 1.5;
+}
+
+/* ══ 18. Privacy Cards ═══════════════════════════════════════════════════ */
+.privacy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.privacy-card {
+  background: #fafafa;
+  border: 1.5px solid #efefef;
+  border-radius: 20px;
+  padding: 28px 22px;
+}
+
+.privacy-icon {
+  font-size: 36px;
+  margin-bottom: 14px;
+}
+
+.privacy-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+}
+
+.privacy-card p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.65;
+}
+
+.privacy-card code {
+  background: #f0f0f0;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: 'Courier New', monospace;
+}
+
+/* ══ 19. Site Footer ═════════════════════════════════════════════════════ */
+.site-footer {
+  background: #111827;
+  color: rgba(255, 255, 255, 0.75);
+  padding: 52px 24px 40px;
+  text-align: center;
+}
+
+.footer-inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.footer-logo { font-size: 22px; }
+
+.footer-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.5px;
+}
+
+.footer-tagline {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 24px;
+  font-style: italic;
+}
+
+.footer-nav {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.footer-nav a {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-nav a:hover { color: white; }
+
+.footer-disclaimer {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.35);
+  line-height: 1.65;
+  margin-bottom: 16px;
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footer-copy {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* ══ 20. Utility ═════════════════════════════════════════════════════════ */
+.hidden { display: none; }
+
+/* ══ 21. Responsive ══════════════════════════════════════════════════════ */
+
+/* Tablet — info sections reflow */
+@media (max-width: 860px) {
+  .steps-grid   { grid-template-columns: repeat(2, 1fr); }
+  .tech-grid    { grid-template-columns: repeat(2, 1fr); }
+  .privacy-grid { grid-template-columns: repeat(1, 1fr); }
+
+  .section-title { font-size: 30px; }
+}
+
+/* Mobile */
 @media (max-width: 600px) {
-  .hero-card        { padding: 32px 20px 28px; }
-  .hero-card h1     { font-size: 36px; }
-  .checkin-card     { padding: 22px 18px; }
-  .score-number     { font-size: 58px; }
-  .trend-section    { padding: 22px 18px; }
-  .history-section  { padding: 22px 18px; }
+  /* Nav */
+  .nav-links { display: none; }
 
-  .dashboard-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
+  /* Landing */
+  .landing          { padding: 52px 20px 48px; }
+  .landing-logo     { font-size: 52px; }
+  .landing-title    { font-size: 48px; letter-spacing: -2px; }
+  .landing-desc     { font-size: 15px; }
+  .landing-cta      { flex-direction: column; align-items: center; }
+  .btn-primary, .btn-secondary, .btn-ghost { width: 100%; max-width: 280px; text-align: center; }
 
-  .dash-value {
-    font-size: 22px;
-  }
+  /* Info sections */
+  .info-section    { padding: 48px 20px; }
+  .section-title   { font-size: 26px; }
+  .steps-grid      { grid-template-columns: 1fr; }
+  .tech-grid       { grid-template-columns: repeat(2, 1fr); }
+  .privacy-grid    { grid-template-columns: 1fr; }
 
-  .trend-date {
-    width: 46px;
-    font-size: 11px;
-  }
+  /* App */
+  .checkin-card    { padding: 22px 18px; }
+  .score-number    { font-size: 58px; }
+  .trend-section   { padding: 22px 18px; }
+  .history-section { padding: 22px 18px; }
+
+  .dashboard-grid  { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .dash-value      { font-size: 22px; }
+  .trend-date      { width: 46px; font-size: 11px; }
 }

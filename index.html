@@ -3,241 +3,413 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HeartHero — Daily Heart-Health Check-In</title>
+  <meta name="description" content="HeartHero — a preventative heart-health tracker. Log daily check-ins, get a personalised heart score, and spot patterns over time. 100% private, no server." />
+  <title>HeartHero — Preventative Heart-Health Tracker</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="app">
 
-    <!-- ══ Hero / Title Section ════════════════════════════════════════════ -->
-    <section class="hero-card">
-      <div class="logo" aria-hidden="true">❤️</div>
-      <h1>HeartHero</h1>
-      <p class="subtitle">
-        Your daily heart-health check-in. Track habits, spot patterns,
-        and stay aware — in under a minute.
+  <!-- ══ Sticky Navigation ══════════════════════════════════════════════════ -->
+  <nav class="site-nav" id="site-nav">
+    <div class="nav-inner">
+      <a href="#top" class="nav-brand" aria-label="HeartHero home">
+        <span class="nav-logo">❤️</span> HeartHero
+      </a>
+      <div class="nav-links">
+        <a href="#checkin">Check-In</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#about">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══ Landing Hero ══════════════════════════════════════════════════════ -->
+  <section class="landing" id="top">
+    <div class="landing-inner">
+      <div class="landing-logo" aria-hidden="true">❤️</div>
+      <p class="landing-eyebrow">Preventative Heart-Health Tracking</p>
+      <h1 class="landing-title">HeartHero</h1>
+      <p class="landing-desc">
+        A daily check-in tool that turns your heart rate, sleep, stress,
+        activity, and symptoms into a personalised score — so you can spot
+        patterns before they become problems.
       </p>
-      <div class="hero-badges">
-        <span class="hero-badge">📊 Dashboard</span>
-        <span class="hero-badge">📈 Trends</span>
-        <span class="hero-badge">💡 Insights</span>
+      <div class="landing-cta">
+        <a href="#checkin" class="btn-primary">Start Check-In ↓</a>
+        <a href="#how-it-works" class="btn-secondary">How It Works</a>
+        <a href="#about" class="btn-ghost">About This Project</a>
       </div>
-    </section>
-
-    <!-- ══ Dashboard Summary Cards ═════════════════════════════════════════ -->
-    <!-- Always visible. Shows "--" placeholders until the first check-in.   -->
-    <section id="dashboardSection" class="dashboard-section">
-      <div class="dashboard-grid">
-
-        <div class="dash-card">
-          <p class="dash-label">🏅 Latest Score</p>
-          <p id="dashLatestScore" class="dash-value">--</p>
-        </div>
-
-        <div class="dash-card">
-          <p class="dash-label">📊 Average Score</p>
-          <p id="dashAvgScore" class="dash-value">--</p>
-        </div>
-
-        <div class="dash-card">
-          <p class="dash-label">📅 Total Check-Ins</p>
-          <p id="dashTotal" class="dash-value">0</p>
-        </div>
-
-        <div class="dash-card">
-          <p class="dash-label">🎯 Latest Concern</p>
-          <p id="dashConcern" class="dash-value">--</p>
-        </div>
-
+      <div class="landing-feature-pills">
+        <span class="feature-pill">📊 Dashboard</span>
+        <span class="feature-pill">📈 Trends</span>
+        <span class="feature-pill">💡 Insights</span>
+        <span class="feature-pill">🔒 100% Private</span>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- ══ Daily Check-In Form ════════════════════════════════════════════ -->
-    <section class="checkin-card">
+  <!-- ══ Functional App ════════════════════════════════════════════════════ -->
+  <!-- All the real functionality lives here.                               -->
+  <section class="app-section" id="checkin">
+    <main class="app">
 
-      <div class="checkin-header">
-        <div>
-          <h2>Daily Check-In</h2>
-          <!-- JS fills in today's date here on page load -->
-          <p id="todayDate" class="today-date"></p>
-        </div>
-      </div>
-      <p class="small-text">Fill in today's information to get your HeartHero Score.</p>
-
-      <form id="checkinForm" novalidate>
-
-        <!-- Heart Rate ─────────────────────────────────────────────────── -->
-        <div class="form-group">
-          <label for="heartRate">
-            <span class="label-icon">💓</span> Resting Heart Rate
-          </label>
-          <input
-            type="number"
-            id="heartRate"
-            placeholder="e.g. 72"
-            min="30"
-            max="220"
-            required
-          />
-          <span class="input-hint">Normal resting range: 60 – 100 bpm</span>
-          <!-- Error message shown by JS if the value is missing or out of range -->
-          <span id="heartRateError" class="field-error hidden"></span>
-        </div>
-
-        <!-- Sleep Hours ─────────────────────────────────────────────────── -->
-        <div class="form-group">
-          <label for="sleepHours">
-            <span class="label-icon">🌙</span> Sleep Last Night (hours)
-          </label>
-          <input
-            type="number"
-            id="sleepHours"
-            placeholder="e.g. 7"
-            step="0.5"
-            min="0"
-            max="24"
-            required
-          />
-          <span class="input-hint">Recommended: 7 – 9 hours for adults</span>
-          <span id="sleepHoursError" class="field-error hidden"></span>
-        </div>
-
-        <!-- Stress Level (range slider) ─────────────────────────────────── -->
-        <div class="form-group">
-          <label for="stressLevel">
-            <span class="label-icon">🧠</span> Stress Level:
-            <span id="stressValue" class="stress-badge">5</span>
-            <span class="stress-out-of">/10</span>
-          </label>
-          <input type="range" id="stressLevel" min="1" max="10" value="5" />
-          <div class="range-labels">
-            <span>Calm</span>
-            <span>Very Stressed</span>
+      <!-- Dashboard Summary Cards -->
+      <section id="dashboardSection" class="dashboard-section">
+        <div class="dashboard-grid">
+          <div class="dash-card">
+            <p class="dash-label">🏅 Latest Score</p>
+            <p id="dashLatestScore" class="dash-value">--</p>
+          </div>
+          <div class="dash-card">
+            <p class="dash-label">📊 Average Score</p>
+            <p id="dashAvgScore" class="dash-value">--</p>
+          </div>
+          <div class="dash-card">
+            <p class="dash-label">📅 Total Check-Ins</p>
+            <p id="dashTotal" class="dash-value">0</p>
+          </div>
+          <div class="dash-card">
+            <p class="dash-label">🎯 Latest Concern</p>
+            <p id="dashConcern" class="dash-value">--</p>
           </div>
         </div>
+      </section>
 
-        <!-- Exercise Minutes ─────────────────────────────────────────────── -->
-        <div class="form-group">
-          <label for="exerciseMinutes">
-            <span class="label-icon">🏃</span> Exercise Today (minutes)
-          </label>
-          <input
-            type="number"
-            id="exerciseMinutes"
-            placeholder="e.g. 30"
-            min="0"
-            max="300"
-            required
-          />
-          <span class="input-hint">Recommended: at least 30 min of moderate activity</span>
-          <span id="exerciseMinutesError" class="field-error hidden"></span>
+      <!-- Daily Check-In Form -->
+      <section class="checkin-card">
+        <div class="checkin-header">
+          <div>
+            <h2>Daily Check-In</h2>
+            <p id="todayDate" class="today-date"></p>
+          </div>
         </div>
+        <p class="small-text">Fill in today's information to get your HeartHero Score.</p>
 
-        <!-- Symptoms checkboxes ─────────────────────────────────────────── -->
-        <div class="symptoms-box">
-          <p class="symptoms-title">⚠️ Symptoms Today</p>
-          <p class="symptoms-subtitle">Check any symptoms you have noticed today.</p>
+        <form id="checkinForm" novalidate>
 
-          <label class="checkbox-row">
-            <input type="checkbox" id="chestPain" />
-            <span>Chest pain or pressure</span>
-          </label>
+          <div class="form-group">
+            <label for="heartRate">
+              <span class="label-icon">💓</span> Resting Heart Rate
+            </label>
+            <input type="number" id="heartRate" placeholder="e.g. 72" min="30" max="220" required />
+            <span class="input-hint">Normal resting range: 60 – 100 bpm</span>
+            <span id="heartRateError" class="field-error hidden"></span>
+          </div>
 
-          <label class="checkbox-row">
-            <input type="checkbox" id="shortnessBreath" />
-            <span>Shortness of breath</span>
-          </label>
+          <div class="form-group">
+            <label for="sleepHours">
+              <span class="label-icon">🌙</span> Sleep Last Night (hours)
+            </label>
+            <input type="number" id="sleepHours" placeholder="e.g. 7" step="0.5" min="0" max="24" required />
+            <span class="input-hint">Recommended: 7 – 9 hours for adults</span>
+            <span id="sleepHoursError" class="field-error hidden"></span>
+          </div>
 
-          <label class="checkbox-row">
-            <input type="checkbox" id="dizziness" />
-            <span>Dizziness or lightheadedness</span>
-          </label>
+          <div class="form-group">
+            <label for="stressLevel">
+              <span class="label-icon">🧠</span> Stress Level:
+              <span id="stressValue" class="stress-badge">5</span>
+              <span class="stress-out-of">/10</span>
+            </label>
+            <input type="range" id="stressLevel" min="1" max="10" value="5" />
+            <div class="range-labels">
+              <span>Calm</span>
+              <span>Very Stressed</span>
+            </div>
+          </div>
 
-          <label class="checkbox-row">
-            <input type="checkbox" id="palpitations" />
-            <span>Heart palpitations or racing heart</span>
-          </label>
+          <div class="form-group">
+            <label for="exerciseMinutes">
+              <span class="label-icon">🏃</span> Exercise Today (minutes)
+            </label>
+            <input type="number" id="exerciseMinutes" placeholder="e.g. 30" min="0" max="300" required />
+            <span class="input-hint">Recommended: at least 30 min of moderate activity</span>
+            <span id="exerciseMinutesError" class="field-error hidden"></span>
+          </div>
+
+          <div class="symptoms-box">
+            <p class="symptoms-title">⚠️ Symptoms Today</p>
+            <p class="symptoms-subtitle">Check any symptoms you have noticed today.</p>
+            <label class="checkbox-row">
+              <input type="checkbox" id="chestPain" />
+              <span>Chest pain or pressure</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="shortnessBreath" />
+              <span>Shortness of breath</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="dizziness" />
+              <span>Dizziness or lightheadedness</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="palpitations" />
+              <span>Heart palpitations or racing heart</span>
+            </label>
+          </div>
+
+          <button type="submit" id="submitBtn">Calculate My Heart Score</button>
+        </form>
+
+        <!-- Result Card -->
+        <div id="resultCard" class="result-card hidden" aria-live="polite">
+          <p class="result-label">Your HeartHero Score</p>
+          <div id="scoreNumber" class="score-number">--</div>
+          <div class="score-bar" role="progressbar" aria-label="Heart score bar">
+            <div id="scoreBarFill" class="score-bar-fill"></div>
+          </div>
+          <p id="riskLevel" class="risk-level"></p>
+          <p id="feedback" class="feedback"></p>
+          <div class="breakdown-section">
+            <p class="breakdown-title">Score Breakdown</p>
+            <ul id="breakdownList" class="breakdown-list"></ul>
+          </div>
+          <div id="insightCard" class="insight-card">
+            <p class="insight-title">💡 Today's Insight</p>
+            <ul id="insightList" class="insight-list"></ul>
+          </div>
+          <button type="button" id="resetBtn" class="reset-btn">Check In Again</button>
         </div>
+      </section>
 
-        <button type="submit" id="submitBtn">Calculate My Heart Score</button>
-      </form>
+      <!-- Score Trend -->
+      <section id="trendSection" class="trend-section">
+        <h2>📈 Recent Score Trend</h2>
+        <p class="small-text">Your last 5 check-ins visualised as bars.</p>
+        <div id="trendBars" class="trend-bars"></div>
+      </section>
 
-      <!-- ══ Result Card (hidden until form is submitted) ════════════════ -->
-      <div id="resultCard" class="result-card hidden" aria-live="polite">
-        <p class="result-label">Your HeartHero Score</p>
-
-        <!-- Animated score number -->
-        <div id="scoreNumber" class="score-number">--</div>
-
-        <!-- Progress bar that fills to the score -->
-        <div class="score-bar" role="progressbar" aria-label="Heart score bar">
-          <div id="scoreBarFill" class="score-bar-fill"></div>
+      <!-- Check-In History -->
+      <section id="historySection" class="history-section">
+        <div class="history-header">
+          <div>
+            <h2>📋 Check-In History</h2>
+            <p id="historyCount" class="history-count"></p>
+          </div>
+          <button type="button" id="clearHistoryBtn" class="clear-btn">🗑 Clear All</button>
         </div>
+        <div id="historyList" class="history-list"></div>
+      </section>
 
-        <!-- Risk level label -->
-        <p id="riskLevel" class="risk-level"></p>
+    </main>
+  </section>
 
-        <!-- Personalised feedback message -->
-        <p id="feedback" class="feedback"></p>
-
-        <!-- Score breakdown — what added or removed points -->
-        <div class="breakdown-section">
-          <p class="breakdown-title">Score Breakdown</p>
-          <ul id="breakdownList" class="breakdown-list"></ul>
-        </div>
-
-        <!-- Today's Insight — rule-based tips from the input values -->
-        <div id="insightCard" class="insight-card">
-          <p class="insight-title">💡 Today's Insight</p>
-          <ul id="insightList" class="insight-list"></ul>
-        </div>
-
-        <button type="button" id="resetBtn" class="reset-btn">Check In Again</button>
+  <!-- ══ How It Works ══════════════════════════════════════════════════════ -->
+  <section class="info-section bg-light" id="how-it-works">
+    <div class="section-inner">
+      <div class="section-header">
+        <p class="section-eyebrow">Simple by Design</p>
+        <h2 class="section-title">How HeartHero Works</h2>
+        <p class="section-subtitle">
+          A four-step loop that turns a minute of reflection into
+          a score, a trend, and an insight.
+        </p>
       </div>
 
-    </section>
+      <div class="steps-grid">
 
-    <!-- ══ Score Trend ════════════════════════════════════════════════════ -->
-    <!-- Always visible. Shows an empty-state message before first check-in. -->
-    <section id="trendSection" class="trend-section">
-      <h2>📈 Recent Score Trend</h2>
-      <p class="small-text">Your last 5 check-ins visualised as bars.</p>
-      <!-- JS builds one row per recent check-in, or an empty-state message -->
-      <div id="trendBars" class="trend-bars"></div>
-    </section>
-
-    <!-- ══ Check-In History ══════════════════════════════════════════════ -->
-    <!-- Always visible. Shows a friendly empty-state before first check-in. -->
-    <section id="historySection" class="history-section">
-
-      <div class="history-header">
-        <div>
-          <h2>📋 Check-In History</h2>
-          <p id="historyCount" class="history-count"></p>
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <div class="step-icon">✏️</div>
+          <h3>Daily Check-In</h3>
+          <p>
+            Enter your resting heart rate, sleep hours, stress level,
+            exercise minutes, and any symptoms you noticed today.
+          </p>
         </div>
-        <button type="button" id="clearHistoryBtn" class="clear-btn">🗑 Clear All</button>
+
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <div class="step-icon">✅</div>
+          <h3>Input Validation</h3>
+          <p>
+            HeartHero checks that every value is realistic and within
+            a safe range before running the score calculation.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <div class="step-icon">📊</div>
+          <h3>Score Calculation</h3>
+          <p>
+            A rule-based algorithm starts at 100 and deducts points for
+            concerning patterns — elevated heart rate, low sleep, high
+            stress, and symptoms.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">04</div>
+          <div class="step-icon">📋</div>
+          <h3>Track &amp; Reflect</h3>
+          <p>
+            Each check-in is saved to your browser's local storage and
+            shown as a history card, a trend bar, and a personalised
+            insight message.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ About / Why I Built This ═════════════════════════════════════════ -->
+  <section class="info-section bg-white" id="about">
+    <div class="section-inner">
+      <div class="section-header">
+        <p class="section-eyebrow">The Story Behind It</p>
+        <h2 class="section-title">Why I Built HeartHero</h2>
       </div>
 
-      <!-- JS builds and inserts one card per saved check-in, or an empty-state -->
-      <div id="historyList" class="history-list"></div>
+      <div class="about-content">
+        <p>
+          HeartHero was inspired by my dad's experience with a heart attack, which
+          made me think more seriously about how people track everyday health signals
+          before they become larger concerns. I became interested in how simple factors
+          like stress, sleep, activity, heart rate, and symptoms could be organized in
+          one place to help users better understand their own patterns.
+        </p>
 
-    </section>
+        <blockquote class="about-quote">
+          "By turning a short daily check-in into a score, history, trends, and
+          simple insights, the app makes health feel less abstract and more visible."
+        </blockquote>
 
-    <!-- ══ Medical Disclaimer ════════════════════════════════════════════ -->
-    <div class="disclaimer-box">
-      <p class="disclaimer-heading">⚕️ Medical Disclaimer</p>
-      <p class="disclaimer">
-        HeartHero is a personal tracking tool, <strong>not</strong> a medical diagnosis.
-        It cannot replace a doctor's evaluation. If you are experiencing severe chest pain,
-        trouble breathing, fainting, or a medical emergency —
-        <strong>call emergency services immediately</strong>.
+        <p>
+          I built HeartHero to explore how technology can make those everyday signals
+          easier to understand. The goal is not to diagnose anyone or replace a doctor.
+          Instead, HeartHero is meant to help people slow down, check in with themselves,
+          and notice patterns that might otherwise be ignored.
+        </p>
+
+        <p>
+          For me, this project is not just about building a web app. It is about using
+          code to respond to a real problem I saw in my own life. HeartHero reflects my
+          interest in preventative health, human-centered design, and building tools that
+          make complicated information easier for people to act on.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Tech Stack ════════════════════════════════════════════════════════ -->
+  <section class="info-section bg-light" id="tech-stack">
+    <div class="section-inner">
+      <div class="section-header">
+        <p class="section-eyebrow">Built With</p>
+        <h2 class="section-title">Tech Stack</h2>
+        <p class="section-subtitle">
+          No frameworks. No build tools. No backend. Just the fundamentals — purposefully.
+        </p>
+      </div>
+
+      <div class="tech-grid">
+        <div class="tech-card">
+          <span class="tech-icon">🌐</span>
+          <span class="tech-name">HTML5</span>
+          <span class="tech-desc">Semantic page structure and accessibility</span>
+        </div>
+        <div class="tech-card">
+          <span class="tech-icon">🎨</span>
+          <span class="tech-name">CSS3</span>
+          <span class="tech-desc">Custom styling, animations, responsive grid</span>
+        </div>
+        <div class="tech-card">
+          <span class="tech-icon">⚡</span>
+          <span class="tech-name">JavaScript</span>
+          <span class="tech-desc">Scoring logic, DOM updates, validation</span>
+        </div>
+        <div class="tech-card">
+          <span class="tech-icon">💾</span>
+          <span class="tech-name">localStorage</span>
+          <span class="tech-desc">Client-side persistence — no server needed</span>
+        </div>
+        <div class="tech-card">
+          <span class="tech-icon">🚀</span>
+          <span class="tech-name">GitHub Pages</span>
+          <span class="tech-desc">Free static hosting with automatic deploys</span>
+        </div>
+        <div class="tech-card">
+          <span class="tech-icon">📱</span>
+          <span class="tech-name">Responsive Design</span>
+          <span class="tech-desc">Works on any screen size without frameworks</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Privacy & Safety ══════════════════════════════════════════════════ -->
+  <section class="info-section bg-white" id="privacy">
+    <div class="section-inner">
+      <div class="section-header">
+        <p class="section-eyebrow">Your Data Stays Yours</p>
+        <h2 class="section-title">Privacy &amp; Safety</h2>
+      </div>
+
+      <div class="privacy-grid">
+        <div class="privacy-card">
+          <div class="privacy-icon">🔒</div>
+          <h3>Stored Locally Only</h3>
+          <p>
+            HeartHero saves your check-in history directly in your browser
+            using <code>localStorage</code>. No account is required. No data
+            is ever sent to a server, cloud database, or third party.
+          </p>
+        </div>
+        <div class="privacy-card">
+          <div class="privacy-icon">🗑️</div>
+          <h3>You Control Your Data</h3>
+          <p>
+            You can clear your entire history at any time using the
+            "Clear All" button. Clearing your browser's local storage also
+            removes all HeartHero data permanently.
+          </p>
+        </div>
+        <div class="privacy-card">
+          <div class="privacy-icon">⚕️</div>
+          <h3>Not a Medical Tool</h3>
+          <p>
+            HeartHero is a personal tracking tool, <strong>not</strong> a
+            medical diagnosis. It cannot replace a doctor. If you experience
+            severe symptoms or a medical emergency, call emergency services
+            immediately.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Site Footer ════════════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="footer-logo">❤️</span>
+        <span class="footer-name">HeartHero</span>
+      </div>
+      <p class="footer-tagline">
+        Preventative heart-health tracking — built with purpose.
+      </p>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="#checkin">Check-In</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#about">About</a>
+        <a href="#privacy">Privacy</a>
+      </nav>
+      <p class="footer-disclaimer">
+        HeartHero is not a medical diagnosis tool. If you are experiencing
+        severe chest pain, trouble breathing, fainting, or a medical emergency,
+        call emergency services immediately.
+      </p>
+      <p class="footer-copy">
+        © 2026 HeartHero &nbsp;·&nbsp; All check-in data is stored locally on
+        your device. Nothing is sent to any server.
       </p>
     </div>
-
-  </main>
+  </footer>
 
   <script src="script.js"></script>
 </body>
